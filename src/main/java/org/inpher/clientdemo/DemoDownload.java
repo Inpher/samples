@@ -19,20 +19,11 @@ import org.inpher.clientapi.VisitElementTreeRequest;
  *
  */
 public class DemoDownload {
-	@DemoArg
 	private static String dest = "data/output/"; 
-	@DemoArg
 	private static String source = "data"; 
-	@DemoArg
 	private static String overwrite = "true"; 
-	@DemoArg
 	private static String username = "inpherawsdemo"; 
-	@DemoArg
-	private static String s3BucketName = "inpherbetademo"; 
-	@DemoArg
 	private static String pwd = "mypwd"; 
-	@DemoArg
-	private static String solrhttp = "https://54.148.151.19:8983/solr/inpher-frequency"; 
 	
 	private InpherClient inpherClient;
 	
@@ -98,7 +89,7 @@ public class DemoDownload {
 	
 	public static void main(String[] args) throws Exception {
 		// create the client
-		InpherClient inpherClient = Demo.createInpherClient(solrhttp, s3BucketName);
+		InpherClient inpherClient = Demo.generateInpherClient();
 		InpherUser user = new InpherUser(username, pwd);
 		inpherClient.loginUser(user); 
 		
