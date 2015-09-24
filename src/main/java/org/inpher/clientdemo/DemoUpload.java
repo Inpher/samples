@@ -18,8 +18,8 @@ import org.inpher.clientapi.exceptions.ExistingDirectoryException;
 public class DemoUpload {
 	private static String username = "inpherawsdemo"; 
 	private static String pwd = "mypwd"; 
-	private static String source = "data/demo"; 
-	private static String dest = "/demo";
+	private static String source = "medicalmixed"; 
+	private static String dest = "medicalbis";
 	
 	/**
 	 * In this demo, we will upload the file or folder named [source] into the remote 

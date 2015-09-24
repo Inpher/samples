@@ -9,6 +9,7 @@ import org.inpher.clientapi.InpherClientConfiguration;
 import org.inpher.clientapi.SearchEngineConfiguration;
 import org.inpher.clientapi.exceptions.InpherException;
 
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -17,18 +18,19 @@ public class Demo {
 	// configuration of the Amazon S3 client
     public static final Regions amazonS3Region = Regions.EU_CENTRAL_1;
     public static final String amazonS3EndPoint = "s3.eu-central-1.amazonaws.com";
-    public static final String amazonS3bucketName = "testBucket";
+    public static final String amazonS3bucketName = "inpherawsdemo";
+	
 
     public static CloudStorageConfiguration getAmazonS3Configuration() {
-    	AmazonS3Client s3client = new AmazonS3Client();
-    	// ?? AmazonS3Client s3client = new AmazonS3Client(new ProfileCredentialsProvider().getCredentials());
+    	//AmazonS3Client s3client = new AmazonS3Client();
+    	AmazonS3Client s3client = new AmazonS3Client(new ProfileCredentialsProvider().getCredentials());
 		s3client.setRegion(Region.getRegion(amazonS3Region));
     	s3client.setEndpoint(amazonS3EndPoint);
     	return new AmazonS3StorageConfiguration(s3client, amazonS3bucketName);
     }
     
     // configuration for the Solr Server
-    public static final String solrUrl = "https://demosolr.inpher.io/...";
+    public static final String solrUrl = "https://demosolr.inpher.io/solr/inpher-frequency";
     public static final String serverSSLTrustStore = null;
     public static final String serverSSLTrustStorePassword = null;
     public static final String clientSSLKeyStore = null;

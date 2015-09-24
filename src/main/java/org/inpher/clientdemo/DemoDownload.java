@@ -10,21 +10,13 @@ import org.inpher.clientapi.InpherUser;
 import org.inpher.clientapi.ReadDocumentRequest;
 import org.inpher.clientapi.VisitElementTreeRequest;
 
-/**
- * 
- */
-
-/**
- * @author jetchev
- *
- */
 public class DemoDownload {
 	private static String username = "inpherawsdemo"; 
 	private static String pwd = "mypwd"; 
 
-	private static String dest = "data/output/"; 
-	private static String source = "data"; 
-	private static String overwrite = "true"; 
+	private static String dest = "medicalmixed"; 
+	private static String source = "medicalmixed"; 
+	private static Boolean overwriteFiles = true; 
 
 	public void downloadElement(FrontendPath path, File destDir) {
 	}
@@ -35,60 +27,49 @@ public class DemoDownload {
 		final InpherClient inpherClient = Demo.generateInpherClient();
 		inpherClient.loginUser(new InpherUser(username, pwd)); 
 
-		File destDir = new File(dest);
-		FrontendPath path = FrontendPath.parse(username + ":/"+ source);
+		final File destPath = new File(dest);
+		final FrontendPath sourcePath = FrontendPath.parse(username + ":/"+ source);
 
-		final boolean overwriteB = Boolean.valueOf(overwrite);
-		if (!destDir.exists() || !destDir.isDirectory()) {
-			System.err.println("The local folder "+destDir+" does not exist!");
-			System.exit(1);
-		}
-		ElementVisitor<File> ev = new ElementVisitor<File>() {
+		ElementVisitor<Object> ev = new ElementVisitor<Object>() {
 
 			@Override
-			public ElementVisitResult visitDocument(Element document,
-					File dirPath) {
-				try {
-					File filePath = new File(dirPath,document.getElementName());
-					System.err.println(document.getFrontendURI()+" -> "+filePath);
-					if (filePath.exists()) {
-						if (!filePath.isFile()) {
-							System.err.println("IGNORING: Destination is not a overwritable file");
-							return ElementVisitResult.CONTINUE;
-						}
-						if (!overwriteB) {
-							System.err.println("IGNORING: Destination already exists");
-							return ElementVisitResult.CONTINUE;
-						}
+			public ElementVisitResult visitDocument(Element document, Object unused) {
+				String relPath = sourcePath.relativize(document.getFrontendPath());
+				File filePath = new File(destPath,relPath);
+				System.err.println(document.getFrontendURI()+" -> "+filePath);
+				if (filePath.exists()) {
+					if (!filePath.isFile()) {
+						System.err.println("IGNORING: Destination is not a overwritable file");
+						return ElementVisitResult.CONTINUE;
 					}
-					ReadDocumentRequest req = new ReadDocumentRequest(document.getFrontendURI(), filePath);
-					inpherClient.readDocument(req);
-					return null;
-				} catch (Exception e) {
-					e.printStackTrace();
-					return null;
+					if (!overwriteFiles) {
+						System.err.println("IGNORING: Destination already exists");
+						return ElementVisitResult.CONTINUE;
+					}
 				}
+				ReadDocumentRequest req = new ReadDocumentRequest(document.getFrontendPath(), filePath);
+				inpherClient.readDocument(req);
+				return ElementVisitResult.CONTINUE;
 			}
 
 			@Override
-			public ElementVisitResult postVisitDirectory(Element dir,
-					File userParam) {
-				return null;
+			public ElementVisitResult postVisitDirectory(Element dir, Object userParam) {
+				return ElementVisitResult.CONTINUE;
 			}
 
 			@Override
 			public ElementVisitResult preVisitDirectory(Element dir,
-					File parentPath, Object[] childPath) {
-				File newDir = new File(parentPath,dir.getElementName());
-				childPath[0]=newDir;
+					Object userParam, Object[] paramToPass) {
+				String relPath = sourcePath.relativize(dir.getFrontendPath());
+				File newDir = new File(destPath, relPath);
 				System.err.println("[mkdir] "+dir.getFrontendURI()+" -> "+newDir);
 				if (!newDir.exists() && !newDir.mkdirs()) {
 					throw new RuntimeException("Unable to create " + newDir.getAbsolutePath());
 				}
-				return null;
+				return ElementVisitResult.CONTINUE;
 			}
 		};
-		VisitElementTreeRequest request = new VisitElementTreeRequest(path, ev, destDir);
+		VisitElementTreeRequest request = new VisitElementTreeRequest(sourcePath, ev, null);
 		inpherClient.visitElementTree(request);
 
 	}
