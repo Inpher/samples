@@ -13,15 +13,8 @@ import org.inpher.clientapi.RankedSearchResult;
  *
  */
 public class DemoSearch {
-	@DemoArg
 	private static String username = "inpherawsdemo"; 
-	@DemoArg
-	private static String pwd = "mypwd"; 
-	@DemoArg
-	private static String solrhttp = "https://54.148.151.19:8983/solr/inpher-frequency"; 
-	@DemoArg
-	private static String s3BucketName = "inpherbetademo"; 
-	@DemoArg
+	private static String pwd = "mypwd";  
 	private static String keywords = "enterprise electronics"; 
 
 	private InpherClient inpherClient;
@@ -38,7 +31,7 @@ public class DemoSearch {
 	}
 	
 	public static void main(String [] args) throws Exception {
-		InpherClient inpherClient = Demo.createInpherClient(solrhttp, s3BucketName); 
+		InpherClient inpherClient = Demo.generateInpherClient(); 
 		InpherUser user = new InpherUser(username, pwd);  
 		inpherClient.loginUser(user);
 		List<String> kwds = new ArrayList<>();

@@ -14,8 +14,7 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 
 public class Demo {
-	
-	//configuration of the Amazon S3 client
+	// configuration of the Amazon S3 client
     public static final Regions amazonS3Region = Regions.EU_CENTRAL_1;
     public static final String amazonS3EndPoint = "s3.eu-central-1.amazonaws.com";
     public static final String amazonS3bucketName = "testBucket";
@@ -28,7 +27,7 @@ public class Demo {
     	return new AmazonS3StorageConfiguration(s3client, amazonS3bucketName);
     }
     
-    //configuration for the Solr Server
+    // configuration for the Solr Server
     public static final String solrUrl = "https://demosolr.inpher.io/...";
     public static final String serverSSLTrustStore = null;
     public static final String serverSSLTrustStorePassword = null;
@@ -43,7 +42,6 @@ public class Demo {
     	HttpSolrClient solrServer = new HttpSolrClient(solrUrl);
     	return new EncryptedSolrSearchEngineConfiguration(solrServer);		
     }
-    
     
 	public static InpherClient generateInpherClient() {
 		try {

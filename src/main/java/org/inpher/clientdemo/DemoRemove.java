@@ -14,21 +14,10 @@ import org.inpher.clientapi.exceptions.InvalidCredentialsException;
 import org.inpher.clientapi.exceptions.NonRegisteredUserException;
 import org.xml.sax.SAXException;
 
-/**
- * @author jetchev
- *
- */
 public class DemoRemove {
-	@DemoArg
 	private static String username = "inpherawsdemo";
-	@DemoArg
 	private static String pwd = "mypwd"; 
-	@DemoArg
 	private static String path = "data"; 
-	@DemoArg
-	private static String solrhttp = "https://54.148.151.19:8983/solr/inpher-frequency"; 
-	@DemoArg
-	private static String s3BucketName = "inpherbetademo"; 
 	private InpherClient inpherClient;
 	
 	DemoRemove(InpherClient inpherClient) {
@@ -42,7 +31,7 @@ public class DemoRemove {
 
 	public static void main(String[] args) throws Exception {
 		InpherUser user = new InpherUser(username, pwd);
-		InpherClient inpherClient = Demo.createInpherClient(solrhttp, s3BucketName);
+		InpherClient inpherClient = Demo.generateInpherClient();
 		// login or registration
 		try {
 			System.out.println("Trying to login ...");

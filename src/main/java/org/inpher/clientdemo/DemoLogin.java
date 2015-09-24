@@ -9,14 +9,8 @@ import org.inpher.clientapi.exceptions.NonRegisteredUserException;
  *
  */
 public class DemoLogin {
-	@DemoArg
 	private static String username = ""; 
-	@DemoArg
 	private static String pwd = ""; 
-	@DemoArg
-	private static String solrhttp = "https://54.148.151.19:8983/solr/inpher-frequency"; 
-	@DemoArg
-	private static String s3BucketName = "inpherbetademo"; 
 	private InpherClient inpherClient;
 	
 	public DemoLogin(InpherClient inpherClient) {
@@ -38,7 +32,7 @@ public class DemoLogin {
 	}
 	
 	public static void main(String [] args) throws Exception {
-		InpherClient inpherClient = Demo.createInpherClient(solrhttp, s3BucketName); 
+		InpherClient inpherClient = Demo.generateInpherClient(); 
 		
 		InpherUser user = new InpherUser(username, pwd);  
 		DemoLogin demoLogin = new DemoLogin(inpherClient); 
