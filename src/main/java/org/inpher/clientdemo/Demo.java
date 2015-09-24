@@ -31,16 +31,23 @@ public class Demo {
     
     // configuration for the Solr Server
     public static final String solrUrl = "https://demosolr.inpher.io/solr/inpher-frequency";
-    public static final String serverSSLTrustStore = null;
-    public static final String serverSSLTrustStorePassword = null;
-    public static final String clientSSLKeyStore = null;
-    public static final String clientSSLKeyStorePassword = null;
+    public static final String serverSSLTrustStore = "demokeys/client-truststore.jks";
+    public static final String serverSSLTrustStorePassword = "changeit";
+    public static final String clientSSLKeyStore = "demokeys/nicolas.jks";
+    public static final String clientSSLKeyStorePassword = "secret";
 
+    static {
+    	if (clientSSLKeyStore!=null)         System.setProperty("javax.net.ssl.keyStore", clientSSLKeyStore);
+    	if (clientSSLKeyStorePassword!=null) System.setProperty("javax.net.ssl.keyStorePassword", clientSSLKeyStorePassword);
+    	if (serverSSLTrustStore!=null)           System.setProperty("javax.net.ssl.trustStore", serverSSLTrustStore);
+    	if (serverSSLTrustStorePassword!=null)   System.setProperty("javax.net.ssl.trustStorePassword", serverSSLTrustStorePassword);
+    	System.out.println("ssl keystore:"+System.getProperty("javax.net.ssl.keyStore"));
+    	System.out.println("ssl keystorepwd:"+System.getProperty("javax.net.ssl.keyStorePassword"));
+    	System.out.println("ssl truststore:"+System.getProperty("javax.net.ssl.trustStore"));
+    	System.out.println("ssl truststorepwd:"+System.getProperty("javax.net.ssl.trustStorePassword"));
+    }
+    
     public static SearchEngineConfiguration getEncryptedSolrConfiguration() {
-    	if (serverSSLTrustStore!=null)         System.setProperty("javax.net.ssl.keyStore", clientSSLKeyStore);
-    	if (serverSSLTrustStorePassword!=null) System.setProperty("javax.net.ssl.keyStorePassword", clientSSLKeyStorePassword);
-    	if (clientSSLKeyStore!=null)           System.setProperty("javax.net.ssl.trustStore", serverSSLTrustStore);
-    	if (clientSSLKeyStorePassword!=null)   System.setProperty("javax.net.ssl.trustStorePassword", serverSSLTrustStorePassword);
     	HttpSolrClient solrServer = new HttpSolrClient(solrUrl);
     	return new EncryptedSolrSearchEngineConfiguration(solrServer);		
     }
