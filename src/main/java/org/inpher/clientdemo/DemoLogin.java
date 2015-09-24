@@ -6,18 +6,16 @@ import org.inpher.clientapi.exceptions.NonRegisteredUserException;
 
 /**
  * @author jetchev
- *
  */
 public class DemoLogin {
-	private static String username = ""; 
-	private static String pwd = ""; 
-	private InpherClient inpherClient;
+	private static String username = "inpherawsdemo"; 
+	private static String pwd = "mypwd"; 
 	
-	public DemoLogin(InpherClient inpherClient) {
-		this.inpherClient = inpherClient; 
-	}
-	
-	public void loginUser(InpherUser user) throws InvalidCredentialsException, NonRegisteredUserException {
+	public static void main(String [] args) throws Exception {
+		InpherClient inpherClient = Demo.generateInpherClient(); 
+		
+		InpherUser user = new InpherUser(username, pwd);  
+
 		try {
 			System.out.println("Logging in user " + user.getUsername() + " ...");
 			inpherClient.loginUser(user);
@@ -29,13 +27,5 @@ public class DemoLogin {
 			System.out.println("Invalid credentials for user " + user.getUsername() + ". Please, try again."); 
 			System.exit(1);
 		}
-	}
-	
-	public static void main(String [] args) throws Exception {
-		InpherClient inpherClient = Demo.generateInpherClient(); 
-		
-		InpherUser user = new InpherUser(username, pwd);  
-		DemoLogin demoLogin = new DemoLogin(inpherClient); 
-		demoLogin.loginUser(user);
 	}
 }

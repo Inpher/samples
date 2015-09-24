@@ -19,19 +19,25 @@ import org.inpher.clientapi.VisitElementTreeRequest;
  *
  */
 public class DemoDownload {
+	private static String username = "inpherawsdemo"; 
+	private static String pwd = "mypwd"; 
+
 	private static String dest = "data/output/"; 
 	private static String source = "data"; 
 	private static String overwrite = "true"; 
-	private static String username = "inpherawsdemo"; 
-	private static String pwd = "mypwd"; 
-	
-	private InpherClient inpherClient;
-	
-	public DemoDownload(InpherClient inpherClient) {
-		this.inpherClient = inpherClient;
-	}
-	
+
 	public void downloadElement(FrontendPath path, File destDir) {
+	}
+
+
+	public static void main(String[] args) throws Exception {
+		// create the client
+		final InpherClient inpherClient = Demo.generateInpherClient();
+		inpherClient.loginUser(new InpherUser(username, pwd)); 
+
+		File destDir = new File(dest);
+		FrontendPath path = FrontendPath.parse(username + ":/"+ source);
+
 		final boolean overwriteB = Boolean.valueOf(overwrite);
 		if (!destDir.exists() || !destDir.isDirectory()) {
 			System.err.println("The local folder "+destDir+" does not exist!");
@@ -43,21 +49,21 @@ public class DemoDownload {
 			public ElementVisitResult visitDocument(Element document,
 					File dirPath) {
 				try {
-				File filePath = new File(dirPath,document.getElementName());
-				System.err.println(document.getFrontendURI()+" -> "+filePath);
-				if (filePath.exists()) {
-					if (!filePath.isFile()) {
-						System.err.println("IGNORING: Destination is not a overwritable file");
-						return ElementVisitResult.CONTINUE;
+					File filePath = new File(dirPath,document.getElementName());
+					System.err.println(document.getFrontendURI()+" -> "+filePath);
+					if (filePath.exists()) {
+						if (!filePath.isFile()) {
+							System.err.println("IGNORING: Destination is not a overwritable file");
+							return ElementVisitResult.CONTINUE;
+						}
+						if (!overwriteB) {
+							System.err.println("IGNORING: Destination already exists");
+							return ElementVisitResult.CONTINUE;
+						}
 					}
-					if (!overwriteB) {
-						System.err.println("IGNORING: Destination already exists");
-						return ElementVisitResult.CONTINUE;
-					}
-				}
-				ReadDocumentRequest req = new ReadDocumentRequest(document.getFrontendURI(), filePath);
-				inpherClient.readDocument(req);
-				return null;
+					ReadDocumentRequest req = new ReadDocumentRequest(document.getFrontendURI(), filePath);
+					inpherClient.readDocument(req);
+					return null;
 				} catch (Exception e) {
 					e.printStackTrace();
 					return null;
@@ -77,26 +83,13 @@ public class DemoDownload {
 				childPath[0]=newDir;
 				System.err.println("[mkdir] "+dir.getFrontendURI()+" -> "+newDir);
 				if (!newDir.exists() && !newDir.mkdirs()) {
-			        throw new RuntimeException("Unable to create " + newDir.getAbsolutePath());
-			    }
+					throw new RuntimeException("Unable to create " + newDir.getAbsolutePath());
+				}
 				return null;
 			}
 		};
 		VisitElementTreeRequest request = new VisitElementTreeRequest(path, ev, destDir);
 		inpherClient.visitElementTree(request);
-	}
-	
-	
-	public static void main(String[] args) throws Exception {
-		// create the client
-		InpherClient inpherClient = Demo.generateInpherClient();
-		InpherUser user = new InpherUser(username, pwd);
-		inpherClient.loginUser(user); 
-		
-		// create the DemoDownload object 
-		DemoDownload demoDownload = new DemoDownload(inpherClient);
-		File destDir = new File(dest);
-		FrontendPath path = FrontendPath.parse(username + ":/"+ source);
-		demoDownload.downloadElement(path, destDir);
+
 	}
 }
