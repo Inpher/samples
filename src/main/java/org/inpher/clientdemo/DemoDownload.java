@@ -10,28 +10,27 @@ import org.inpher.clientapi.InpherUser;
 import org.inpher.clientapi.ReadDocumentRequest;
 import org.inpher.clientapi.VisitElementTreeRequest;
 
+/**
+ * A demo application for recursively downloading files stored on the cloud. 
+ */
 public class DemoDownload {
-	private static String username = "inpherawsdemo"; 
-	private static String pwd = "mypwd"; 
+	private static String username = "inpherawsdemo"; 	// set your Inpher username 
+	private static String pwd = "mypwd"; 				// set your password 
 
-	private static String dest = "medicalmixed"; 
-	private static String source = "medicalmixed"; 
-	private static Boolean overwriteFiles = true; 
-
-	public void downloadElement(FrontendPath path, File destDir) {
-	}
-
+	private static String dest = "medicalmixed"; 		// set your destination directory 
+	private static String source = "medicalmixed"; 		// set your source directory 
+	private static Boolean overwriteFiles = true; 		// set whether you would like files to be overwritten
 
 	public static void main(String[] args) throws Exception {
-		// create the client
-		final InpherClient inpherClient = Demo.generateInpherClient();
+		// create the Inpher client
+		final InpherClient inpherClient = DemoConfig.generateInpherClient();
 		inpherClient.loginUser(new InpherUser(username, pwd)); 
 
 		final File destPath = new File(dest);
 		final FrontendPath sourcePath = FrontendPath.parse(username + ":/"+ source);
 
+		// create the ElementVisitor object 
 		ElementVisitor<Object> ev = new ElementVisitor<Object>() {
-
 			@Override
 			public ElementVisitResult visitDocument(Element document, Object unused) {
 				String relPath = sourcePath.relativize(document.getFrontendPath());
@@ -71,6 +70,5 @@ public class DemoDownload {
 		};
 		VisitElementTreeRequest request = new VisitElementTreeRequest(sourcePath, ev, null);
 		inpherClient.visitElementTree(request);
-
 	}
 }

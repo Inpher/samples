@@ -17,7 +17,7 @@ public class DemoSearch {
 	private static String[] keywords = {"enterprise", "electronics"}; 
 	
 	public static void main(String [] args) throws Exception {
-		InpherClient inpherClient = Demo.generateInpherClient(); 
+		InpherClient inpherClient = DemoConfig.generateInpherClient(); 
 		InpherUser user = new InpherUser(username, pwd);  
 		inpherClient.loginUser(user);
 

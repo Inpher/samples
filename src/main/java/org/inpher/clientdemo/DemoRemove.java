@@ -15,7 +15,7 @@ public class DemoRemove {
 	private static Boolean recursively = true;
 	
 	public static void main(String[] args) throws Exception {
-		InpherClient inpherClient = Demo.generateInpherClient();
+		InpherClient inpherClient = DemoConfig.generateInpherClient();
 		inpherClient.loginUser(new InpherUser(username, pwd));
 		
 		FrontendPath fpath = FrontendPath.parse(username + ":/" + path);

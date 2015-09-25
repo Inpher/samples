@@ -12,7 +12,7 @@ public class DemoLogin {
 	private static String pwd = "mypwd"; 
 	
 	public static void main(String [] args) throws Exception {
-		InpherClient inpherClient = Demo.generateInpherClient(); 
+		InpherClient inpherClient = DemoConfig.generateInpherClient(); 
 		
 		InpherUser user = new InpherUser(username, pwd);  
 

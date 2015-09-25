@@ -1,25 +1,37 @@
 package org.inpher.clientdemo;
 
+import java.io.File;
+
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.inpher.clientapi.AmazonS3StorageConfiguration;
 import org.inpher.clientapi.CloudStorageConfiguration;
 import org.inpher.clientapi.EncryptedSolrSearchEngineConfiguration;
 import org.inpher.clientapi.InpherClient;
 import org.inpher.clientapi.InpherClientConfiguration;
+import org.inpher.clientapi.LocalFileStorageConfiguration;
 import org.inpher.clientapi.SearchEngineConfiguration;
 import org.inpher.clientapi.exceptions.InpherException;
 
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3Client;
-
-public class Demo {
-	// configuration of the Amazon S3 client
-    public static final Regions amazonS3Region = Regions.EU_CENTRAL_1;
-    public static final String amazonS3EndPoint = "s3.eu-central-1.amazonaws.com";
-    public static final String amazonS3bucketName = "inpherawsdemo";
+/**
+ * A basic Inpher client configuration class.  
+ */
+public class DemoConfig {
+	/**
+	 * Creates a local root folder configuration in the current directory. 
+	 * 
+	 * @return a local file storage configuration
+	 */
+	public static CloudStorageConfiguration getLocalStorageConfiguration() {
+		File rootFolder = new File("demorootfolder"); 
+		rootFolder.mkdir(); 
+		return new LocalFileStorageConfiguration(rootFolder);  
+	}
 	
+	/*
+	 * Below is a typical example of an amazon S3 storage setting.  
+	 *
+    public static final Regions amazonS3Region = <your region>;
+    public static final String amazonS3EndPoint = <your endpoint>;
+    public static final String amazonS3bucketName = <your bucket name>;
 
     public static CloudStorageConfiguration getAmazonS3Configuration() {
     	//AmazonS3Client s3client = new AmazonS3Client();
@@ -28,23 +40,21 @@ public class Demo {
     	s3client.setEndpoint(amazonS3EndPoint);
     	return new AmazonS3StorageConfiguration(s3client, amazonS3bucketName);
     }
+    */
+	
+    public static final String solrUrl = "http://127.0.0.1:8983/solr/inpher-frequency";
     
-    // configuration for the Solr Server
-    public static final String solrUrl = "https://demosolr.inpher.io/solr/inpher-frequency";
-    public static final String serverSSLTrustStore = "demokeys/client-truststore.jks";
-    public static final String serverSSLTrustStorePassword = "changeit";
-    public static final String clientSSLKeyStore = "demokeys/nicolas.jks";
-    public static final String clientSSLKeyStorePassword = "secret";
+    // If using https solrUrl, specify these variables if needed.  
+    public static final String clientSSLKeyStore = null; 			// your key store file location 
+    public static final String clientSSLKeyStorePassword = null;	// your key store password 
+    public static final String serverSSLTrustStore = null;			// your trust store file location 
+    public static final String serverSSLTrustStorePassword = null;	// your trust store password
 
     static {
     	if (clientSSLKeyStore!=null)         System.setProperty("javax.net.ssl.keyStore", clientSSLKeyStore);
     	if (clientSSLKeyStorePassword!=null) System.setProperty("javax.net.ssl.keyStorePassword", clientSSLKeyStorePassword);
     	if (serverSSLTrustStore!=null)           System.setProperty("javax.net.ssl.trustStore", serverSSLTrustStore);
     	if (serverSSLTrustStorePassword!=null)   System.setProperty("javax.net.ssl.trustStorePassword", serverSSLTrustStorePassword);
-    	System.out.println("ssl keystore:"+System.getProperty("javax.net.ssl.keyStore"));
-    	System.out.println("ssl keystorepwd:"+System.getProperty("javax.net.ssl.keyStorePassword"));
-    	System.out.println("ssl truststore:"+System.getProperty("javax.net.ssl.trustStore"));
-    	System.out.println("ssl truststorepwd:"+System.getProperty("javax.net.ssl.trustStorePassword"));
     }
     
     public static SearchEngineConfiguration getEncryptedSolrConfiguration() {
@@ -54,7 +64,9 @@ public class Demo {
     
 	public static InpherClient generateInpherClient() {
 		try {
-			CloudStorageConfiguration cloudConfig = getAmazonS3Configuration();
+			// Uncomment one of the two options depending on your storage configuration choice. 
+			// CloudStorageConfiguration cloudConfig = getAmazonS3Configuration();
+			CloudStorageConfiguration cloudConfig = getLocalStorageConfiguration();
 			SearchEngineConfiguration searchConfig = getEncryptedSolrConfiguration();
 			InpherClientConfiguration inpherConfig = new InpherClientConfiguration(cloudConfig, searchConfig);
 			return InpherClient.getClient(inpherConfig);
