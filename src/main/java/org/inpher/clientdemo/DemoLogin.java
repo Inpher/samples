@@ -5,7 +5,7 @@ import org.inpher.clientapi.exceptions.InvalidCredentialsException;
 import org.inpher.clientapi.exceptions.NonRegisteredUserException;
 
 /**
- * @author jetchev
+ * A simple demo application for a login. 
  */
 public class DemoLogin {
 	private static String username = "inpherawsdemo"; 

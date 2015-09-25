@@ -9,6 +9,9 @@ import org.inpher.clientapi.InpherClient;
 import org.inpher.clientapi.InpherUser;
 import org.inpher.clientapi.VisitElementTreeRequest;
 
+/**
+ * A demo application to list the content of a directory. Uses the Inpher element visitor. 
+ */
 public class DemoList {
 	private static String username = "inpherawsdemo";
 	private static String pwd = "mypwd";

@@ -15,21 +15,21 @@ import org.inpher.clientapi.MakeDirectoryRequest;
 import org.inpher.clientapi.UploadDocumentRequest;
 import org.inpher.clientapi.exceptions.ExistingDirectoryException;
 
+/**
+ * In this demo, we will upload the file or folder named [source] into the remote 
+ * location named [dest].
+ * If the source is a folder, we perform the upload recursively on the local filesystem. 
+ */
 public class DemoUpload {
-	private static String username = "inpherawsdemo"; 
-	private static String pwd = "mypwd"; 
-	private static String source = "medicalmixed"; 
-	private static String dest = "medicalbis";
+	private static String username = "inpherawsdemo"; 		// change with your username 
+	private static String pwd = "mypwd"; 					// change with your password 
+	private static String source = "medicalmixed"; 			// change with your local source directory path  
+	private static String dest = "medicalbis";				// change with your backend destination path 
 	
-	/**
-	 * In this demo, we will upload the file or folder named [source] into the remote 
-	 * location named [dest].
-	 * If the source is a folder, we perform the upload recursively on the local filesystem 
-	 */
 	public static void main(String [] args) throws Exception {
-		// creating the inpher client  
+		// creating the Inpher client  
 		final InpherClient inpherClient = DemoConfig.generateInpherClient(); 
-		//login with the specified credentials
+		// login with the specified credentials
 		inpherClient.loginUser(new InpherUser(username, pwd)); 
 		
 		

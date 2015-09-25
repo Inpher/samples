@@ -34,7 +34,6 @@ public class DemoConfig {
     public static final String amazonS3bucketName = <your bucket name>;
 
     public static CloudStorageConfiguration getAmazonS3Configuration() {
-    	//AmazonS3Client s3client = new AmazonS3Client();
     	AmazonS3Client s3client = new AmazonS3Client(new ProfileCredentialsProvider().getCredentials());
 		s3client.setRegion(Region.getRegion(amazonS3Region));
     	s3client.setEndpoint(amazonS3EndPoint);

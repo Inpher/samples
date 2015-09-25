@@ -11,7 +11,9 @@ import org.inpher.clientapi.ReadDocumentRequest;
 import org.inpher.clientapi.VisitElementTreeRequest;
 
 /**
- * A demo application for recursively downloading files stored on the cloud. 
+ * A demo application for recursively downloading files stored on the cloud. We will download the file or folder 
+ * named [source] from the backend into the local location named [dest].
+ * If the source is a folder, we perform the download recursively on the backend.
  */
 public class DemoDownload {
 	private static String username = "inpherawsdemo"; 	// set your Inpher username 
