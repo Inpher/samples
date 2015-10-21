@@ -44,7 +44,7 @@ public class DemoUpload {
 	
 	public static void main(String [] args) throws Exception {
 		// creating the Inpher client  
-		final InpherClient inpherClient = DemoConfig.generateInpherClient(); 
+		final InpherClient inpherClient = InpherClient.getClient(); 
 		// login with the specified credentials
 		inpherClient.loginUser(new InpherUser(username, pwd)); 
 		

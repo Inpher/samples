@@ -41,7 +41,7 @@ public class DemoDownload {
 
 	public static void main(String[] args) throws Exception {
 		// create the Inpher client
-		final InpherClient inpherClient = DemoConfig.generateInpherClient();
+		final InpherClient inpherClient = InpherClient.getClient();
 		inpherClient.loginUser(new InpherUser(username, pwd)); 
 
 		final File destPath = new File(dest);

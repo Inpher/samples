@@ -28,7 +28,7 @@ public class DemoLogin {
 	private static String pwd = "mypwd"; 
 	
 	public static void main(String [] args) throws Exception {
-		InpherClient inpherClient = DemoConfig.generateInpherClient(); 
+		InpherClient inpherClient = InpherClient.getClient(); 
 		
 		InpherUser user = new InpherUser(username, pwd);  
 

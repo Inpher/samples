@@ -54,7 +54,7 @@ public class DemoList {
 	 * The directory recursion depth is the parameter [maxDepth].	 * 
 	 */
 	public static void main(String[] args) throws Exception {
-		InpherClient inpherClient = DemoConfig.generateInpherClient();
+		InpherClient inpherClient = InpherClient.getClient();
 		inpherClient.loginUser(new InpherUser(username, pwd));
 		FrontendPath fpath = FrontendPath.parse(username + ":/" + path);
 

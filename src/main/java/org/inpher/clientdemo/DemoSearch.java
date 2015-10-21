@@ -32,7 +32,7 @@ public class DemoSearch {
 	private static String[] keywords = {"enterprise", "electronics"}; 	// change to your list of keywords 
 	
 	public static void main(String [] args) throws Exception {
-		InpherClient inpherClient = DemoConfig.generateInpherClient(); 
+		InpherClient inpherClient = InpherClient.getClient(); 
 		InpherUser user = new InpherUser(username, pwd);  
 		inpherClient.loginUser(user);
 

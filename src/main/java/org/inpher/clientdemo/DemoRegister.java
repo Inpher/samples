@@ -27,7 +27,7 @@ public class DemoRegister {
 	private static String pwd = "mypwd"; 					// change to your password 
 	
 	public static void main(String [] args) throws Exception {
-		InpherClient inpherClient = DemoConfig.generateInpherClient(); 
+		InpherClient inpherClient = InpherClient.getClient(); 
 		InpherUser user = new InpherUser(username, pwd);
 		
 		try {
