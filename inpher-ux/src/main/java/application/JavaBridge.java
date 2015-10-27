@@ -34,6 +34,7 @@ import org.inpher.clientapi.ElementVisitResult;
 import org.inpher.clientapi.ElementVisitor;
 import org.inpher.clientapi.FrontendPath;
 import org.inpher.clientapi.InpherClient;
+import org.inpher.clientapi.InpherProgressListener;
 import org.inpher.clientapi.InpherUser;
 import org.inpher.clientapi.MakeDirectoryRequest;
 import org.inpher.clientapi.ReadDocumentRequest;
@@ -54,6 +55,8 @@ import application.transfer.RankedSearchResultsToJs;
 import application.transfer.RegularStatus;
 import application.transfer.UploadProgressEntity;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.DirectoryChooser;
 import netscape.javascript.JSObject;
 
@@ -68,11 +71,8 @@ public class JavaBridge {
 	 * @param window
 	 */
 	public JavaBridge() {
-		try {
-		inpherClient = InpherClient.getClient();
-		} catch (Exception e) {}
 	}
-
+	
 	public synchronized void log(String message) {
 		System.out.println(message);
 	}
@@ -154,6 +154,25 @@ public class JavaBridge {
 		});
 	}
 
+	public void initializeInpherClient() {
+        try {
+        	inpherClient = InpherClient.getClient();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+    	System.err.println("ERROR!!!");
+        if (inpherClient==null) {
+        	Alert a = new Alert(AlertType.ERROR);
+        	a.setContentText(
+        			"The inpher Client has not been generated\n"
+        					+"properly. Please run Setup again");
+        	a.showAndWait();
+        	Platform.exit();
+        }
+	}
+
+
+	
 	/**
 	 * Everything that we do in this function is the following: for each
 	 * sourceURI: 1. if local directory, create exactly the same remote
