@@ -1,3 +1,4 @@
+rm -rf ~/.m2/repository/org/inpher/*
 cd ../inpher-ux/
 mvn package
 cd ..
