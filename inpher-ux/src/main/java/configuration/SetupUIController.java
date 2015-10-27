@@ -92,10 +92,7 @@ public class SetupUIController extends SetupUIModel implements Initializable {
 	private Button finishButton;
 	@FXML 	// fx:id="cancelButton"
 	private Button cancelButton;
-	@FXML 	// fx:id="installButton"
-	private Button installButton;
-	@FXML 	// fx:id="testButton"
-	private Button testButton;
+	// @FXML 	// fx:id="installButton"
 	
 	@FXML 	// fx:id="newSolrRadioButton"
 	private RadioButton newLocalSolrRadioButton;
@@ -132,7 +129,6 @@ public class SetupUIController extends SetupUIModel implements Initializable {
 	@FXML private TextField awsAccessKeyTextField; 
 	@FXML private TextField awsSecretKeyTextField; 
 	@FXML private TextField awsBucketNameTextField; 
-	@FXML private TextField awsRegionTextField; 
 	
 	private UIActivePanel currentPane; 
 	private HashMap<UIActivePanel, AnchorPane> panes;
