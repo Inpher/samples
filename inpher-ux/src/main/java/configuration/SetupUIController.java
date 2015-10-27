@@ -36,7 +36,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import org.apache.zookeeper.Op;
+import org.inpher.clientimpl.utils.CloudStorageType;
+import org.inpher.clientimpl.utils.SolrInstallType;
 
 import com.amazonaws.regions.Regions;
 

@@ -25,15 +25,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.inpher.clientapi.InpherProgressListener;
+import org.inpher.clientimpl.utils.AutoconfInpherClientUtils;
+import org.inpher.clientimpl.utils.InpherConfigProperties;
+import org.inpher.clientimpl.utils.ServiceTestResult;
+import org.inpher.clientimpl.utils.ServiceTestStatus;
 import org.rauschig.jarchivelib.ArchiveFormat;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
 import org.rauschig.jarchivelib.CompressionType;
-import application.Main;
 import utils.DownloadProgressResult;
-import utils.ServiceTestProgressListener;
-import utils.ServiceTestResult;
-import utils.ServiceTestStatus;
+//import utils.Utils;
 import utils.Utils;
 
 /**
@@ -56,15 +58,15 @@ public class LocalSolrInstaller {
 	public void parseGlobalSolrForMirror() {
 	}
 
-	public static ServiceTestResult downloadAndUnzipSolrAndPatches(InpherConfigProperties icp, ServiceTestProgressListener progress) {
+	public static ServiceTestResult downloadAndUnzipSolrAndPatches(InpherConfigProperties icp, InpherProgressListener progress) {
 		final double beginSolrDownloadPercent = 0;
-		final double endSolrDownloadPercent = 70;
-		final double endPatchDownloadPercent = 80;
-		final double endUnzipPercent = 85;
-		final double endPatchPercent = 86;
-		final double endBootPercent = 100;
-		final double coefSolrDownloadPercent = (endSolrDownloadPercent - beginSolrDownloadPercent)/100.;
-		final double coefPatchDownloadPercent = (endPatchDownloadPercent - endSolrDownloadPercent)/100.;
+		final double endSolrDownloadPercent = 0.7;
+		final double endPatchDownloadPercent = 0.8;
+		final double endUnzipPercent = 0.85;
+		final double endPatchPercent = 0.86;
+		final double endBootPercent = 1;
+		final double coefSolrDownloadPercent = (endSolrDownloadPercent - beginSolrDownloadPercent);
+		final double coefPatchDownloadPercent = (endPatchDownloadPercent - endSolrDownloadPercent);
 		//final double coefBootPercent = (endBootPercent - endPatchPercent)/100.;
 		final String messageSolrDownload="Downloading solr from "+solrDownloadURL;
 		final String messagePatchDownload="Downloading patch from "+patchURL;
@@ -128,7 +130,7 @@ public class LocalSolrInstaller {
 		}
 		progress.onProgress(endPatchPercent,"Starting Solr Server!");
 		try { 
-			Utils.startLocalSolr(solrDestFolder, "start");
+			AutoconfInpherClientUtils.startLocalSolr(solrDestFolder, "start");
 		} catch (Exception e) {
 			return ServiceTestResult.createFailure(
 					ServiceTestStatus.UNKNOWN_ERROR, 

@@ -18,12 +18,17 @@ package configuration;
 
 import java.io.File;
 
+import org.inpher.clientapi.InpherProgressListener;
+import org.inpher.clientimpl.utils.AutoconfInpherClientUtils;
+import org.inpher.clientimpl.utils.CloudStorageType;
+import org.inpher.clientimpl.utils.DefaultInpherProgressListener;
+import org.inpher.clientimpl.utils.InpherConfigProperties;
+import org.inpher.clientimpl.utils.ServiceTestResult;
+import org.inpher.clientimpl.utils.ServiceTestStatus;
+import org.inpher.clientimpl.utils.SolrInstallType;
+
 import application.KillableThread;
 import javafx.application.Platform;
-import utils.ServiceTestResult;
-import utils.ServiceTestStatus;
-import utils.SimpleServiceTestProgressListener;
-import utils.Utils;
 
 //In the control panel, we will use the logical state of the GUI to store the logical state of the application
 public abstract class SetupUIModel {
@@ -33,7 +38,7 @@ public abstract class SetupUIModel {
 		public static final SolrInstallType REMOTE_SOLR=SolrInstallType.REMOTE_SOLR;
 		public static final SolrInstallType INSTALL_SOLR_LOCALLY=SolrInstallType.INSTALL_SOLR_LOCALLY;
 
-		public SimpleServiceTestProgressListener uiProgressListener;
+		public InpherProgressListener uiProgressListener;
 		
 		public abstract UIActivePanel getActivePanel();
 		public abstract void setActivePanel(UIActivePanel panel);
@@ -78,11 +83,11 @@ public abstract class SetupUIModel {
         public abstract boolean showAndWaitConfirmLocalStorageMkdirDialog(String directory);
         
         public SetupUIModel() {
-        	uiProgressListener = new SimpleServiceTestProgressListener() {
+        	uiProgressListener = new DefaultInpherProgressListener() {
         	    @Override
-        		public void onProgress(double percent, String status) {
-        	    	super.onProgress(percent, status);
-        	    	Platform.runLater(() -> updateProgressPopup(percent, status));
+        		public void onProgress(double progress, String status) {
+        	    	super.onProgress(progress, status);
+        	    	Platform.runLater(() -> updateProgressPopup(100*progress, status));
         	    }
         	};
         }
@@ -223,7 +228,7 @@ public abstract class SetupUIModel {
 			InpherConfigProperties icp = getEverything();
 			asyncRun(new KillableThread() {
 				public void run() {
-					ServiceTestResult solrStatus = Utils.testSolr(icp, uiProgressListener);
+					ServiceTestResult solrStatus = AutoconfInpherClientUtils.testSolr(icp, uiProgressListener);
 					Platform.runLater(() -> {
 					hideProgressPopup();
 					if (solrStatus.getStatus()==ServiceTestStatus.OK) {
@@ -242,7 +247,7 @@ public abstract class SetupUIModel {
 			InpherConfigProperties icp = getEverything();
 			asyncRun(new KillableThread() {
 				public void run() {
-					ServiceTestResult solrStatus = Utils.testSolr(icp, uiProgressListener);
+					ServiceTestResult solrStatus = AutoconfInpherClientUtils.testSolr(icp, uiProgressListener);
 					Platform.runLater(() -> {
 					hideProgressPopup();
 					if (solrStatus.getStatus() == ServiceTestStatus.OK) {
@@ -261,7 +266,7 @@ public abstract class SetupUIModel {
 			InpherConfigProperties icp = getEverything();
 			asyncRun(new KillableThread() {
 				public void run() {
-					ServiceTestResult localstatus = Utils.testLocalStorage(icp, uiProgressListener);
+					ServiceTestResult localstatus = AutoconfInpherClientUtils.testLocalStorage(icp, uiProgressListener);
 					Platform.runLater(() -> {
 					hideProgressPopup();
 					if (localstatus.getStatus()==ServiceTestStatus.OK) {
@@ -271,7 +276,7 @@ public abstract class SetupUIModel {
 					if (localstatus.getStatus()==ServiceTestStatus.LOCALSTORAGE_ROOT_DOES_NOT_EXIST) {
 						boolean b = showAndWaitConfirmLocalStorageMkdirDialog(icp.getLocalStorageRootFolder());
 						if (b) {
-							Utils.createLocalStorageRoot(icp.getLocalStorageRootFolder());
+							AutoconfInpherClientUtils.createLocalStorageRoot(icp.getLocalStorageRootFolder());
 							saveConfigurationAndExit(icp);
 						}
 						return;
@@ -288,7 +293,7 @@ public abstract class SetupUIModel {
 			InpherConfigProperties icp = getEverything();
 			asyncRun(new KillableThread() {
 				public void run() {
-					ServiceTestResult s3status = Utils.testAmazonS3(icp, uiProgressListener);
+					ServiceTestResult s3status = AutoconfInpherClientUtils.testAmazonS3(icp, uiProgressListener);
 					Platform.runLater(() -> {
 					hideProgressPopup();
 					if (s3status.getStatus()==ServiceTestStatus.OK) {
@@ -310,7 +315,7 @@ public abstract class SetupUIModel {
 						String region = showAndWaitCreateAmazonS3BucketDialog(bucketName);
 						if (region!=null) {
 							icp.setAmazonS3RegionName(region);
-							Utils.createBucket(icp);
+							AutoconfInpherClientUtils.createBucket(icp);
 							return;
 						}
 						return;
