@@ -2,7 +2,7 @@
 BASEDIR=$(dirname "$0")
 
 cd "$BASEDIR/.." 
-
+rm -rf ~/.m2/repository/org/inpher/*
 (cd inpher-ux; mvn package) || exit 1
 rm -rf inpher-sdk
 mkdir inpher-sdk 
