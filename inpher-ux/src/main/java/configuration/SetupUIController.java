@@ -165,8 +165,10 @@ public class SetupUIController extends SetupUIModel implements Initializable {
 		switch(cloudStorageType) {
 			case LOCAL_STORAGE:
 				localStorageRadioButton.setSelected(true);
+				return;
 			case AMAZONS3_STORAGE: 
 				S3StorageRadioButton.setSelected(true);
+				return;
 		}
 	}
 

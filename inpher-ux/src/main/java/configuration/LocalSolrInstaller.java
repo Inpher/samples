@@ -34,6 +34,8 @@ import org.rauschig.jarchivelib.ArchiveFormat;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
 import org.rauschig.jarchivelib.CompressionType;
+
+import application.KillableThread;
 import utils.DownloadProgressResult;
 //import utils.Utils;
 import utils.Utils;
@@ -44,8 +46,12 @@ import utils.Utils;
  */
 public class LocalSolrInstaller {
 	public static final String patchURL = "http://www.inpher.io/files/inpher-frequency.tgz"; 
+	public static final String patchSHA256 = 
+			"b9fae3ac0e0b349a7ad9bbd6ccdd0e1e137ea9973007836cadf1b7ab50afdfaf";
 	public static final String solrDownloadURL = 
-			"http://mirror.switch.ch/mirror/apache/dist/lucene/solr/5.3.1/solr-5.3.1.tgz";  
+			"http://mirror.switch.ch/mirror/apache/dist/lucene/solr/5.3.1/solr-5.3.1.tgz";
+	public static final String solrDownloadSHA256 = 
+			"34ddcac071226acd6974a392af7671f687990aa1f9eb4b181d533ca6dca6f42d";
 	public static final String relPatchDest = "solr-5.3.1/server/solr/";  
 	public static final String solrInstallBaseUrl="http://localhost:8983/solr/inpher-frequency"; 
 	/**
@@ -64,14 +70,22 @@ public class LocalSolrInstaller {
 		final double endPatchDownloadPercent = 0.8;
 		final double endUnzipPercent = 0.85;
 		final double endPatchPercent = 0.86;
-		final double endBootPercent = 1;
+		final double endBootPercent = 0.95;
+		final double endTestPercent = 1;
 		final double coefSolrDownloadPercent = (endSolrDownloadPercent - beginSolrDownloadPercent);
 		final double coefPatchDownloadPercent = (endPatchDownloadPercent - endSolrDownloadPercent);
-		//final double coefBootPercent = (endBootPercent - endPatchPercent)/100.;
+		final double coefTestPercent = (endTestPercent - endBootPercent);
 		final String messageSolrDownload="Downloading solr from "+solrDownloadURL;
 		final String messagePatchDownload="Downloading patch from "+patchURL;
 		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR, CompressionType.GZIP);
 
+		if (Utils.isLocalPortInUse(8983)) {
+			return ServiceTestResult.createFailure(
+					ServiceTestStatus.UNKNOWN_ERROR, 
+					"You already have a server listening on port 8983.\n"
+					+"Please re-use it or kill it first.\n"
+					+"Cowardly refusing to install a new Solr server");			
+		}
 		String solrDestFolderStr = icp.getLocalSolrRootFolder();
 		if (Utils.isNullOrEmpty(solrDestFolderStr)) {
 			return ServiceTestResult.createFailure(
@@ -86,9 +100,11 @@ public class LocalSolrInstaller {
 		try {
 			solrZipFile = Utils.getAppTmpDir().resolve("solr.tgz");
 			URL solrPath = new URL(solrDownloadURL);
-			if (!Files.exists(solrZipFile))
+			if (!Files.exists(solrZipFile) || !Utils.verifyChecksum(solrZipFile.toString(), solrDownloadSHA256))
 				Utils.downloadWithProgressListener(solrPath, solrZipFile, x -> {
 					progress.onProgress(beginSolrDownloadPercent+x*coefSolrDownloadPercent, messageSolrDownload);
+					if (Thread.currentThread()==KillableThread.runningThread && KillableThread.runningThread.killRequest) 
+						return DownloadProgressResult.ABORT; 
 					return DownloadProgressResult.CONTINUE;
 				});
 		} catch (IOException e) {
@@ -97,13 +113,17 @@ public class LocalSolrInstaller {
 					"Error Downloading Solr",e);
 		}
 		// download the patches 
+		if (Thread.currentThread()==KillableThread.runningThread && KillableThread.runningThread.killRequest) 
+			return ServiceTestResult.createFailure(ServiceTestStatus.UNKNOWN_ERROR,"aborted");
 		progress.onProgress(endSolrDownloadPercent,messagePatchDownload);
 		Path patchFile = Utils.getAppTmpDir().resolve("patches.tgz"); 
 		try {
 			URL patchesPath = new URL(patchURL);
-			if (!Files.exists(patchFile))
+			if (!Files.exists(patchFile) || !Utils.verifyChecksum(solrZipFile.toString(), patchSHA256))
 				Utils.downloadWithProgressListener(patchesPath, patchFile, x -> {
 					progress.onProgress(endSolrDownloadPercent+x*coefPatchDownloadPercent, messagePatchDownload);
+					if (Thread.currentThread()==KillableThread.runningThread && KillableThread.runningThread.killRequest) 
+						return DownloadProgressResult.ABORT; 
 					return DownloadProgressResult.CONTINUE;				
 				});
 		} catch (IOException e) {
@@ -111,6 +131,8 @@ public class LocalSolrInstaller {
 					ServiceTestStatus.UNKNOWN_ERROR, 
 					"Error Downloading Inpher Core",e);
 		}
+		if (Thread.currentThread()==KillableThread.runningThread && KillableThread.runningThread.killRequest) 
+			return ServiceTestResult.createFailure(ServiceTestStatus.UNKNOWN_ERROR,"aborted");
 		progress.onProgress(endPatchDownloadPercent, "Unzipping Solr to "+solrDestFolder);
 		try {
 			Files.createDirectories(solrDestFolder);
@@ -120,6 +142,8 @@ public class LocalSolrInstaller {
 					ServiceTestStatus.UNKNOWN_ERROR, 
 					"Error Unzipping Solr to "+solrDestFolder,e);
 		}
+		if (Thread.currentThread()==KillableThread.runningThread && KillableThread.runningThread.killRequest) 
+			return ServiceTestResult.createFailure(ServiceTestStatus.UNKNOWN_ERROR,"aborted");
 		progress.onProgress(endUnzipPercent,"Adding inpher core to "+solrDestFolder);
 		try {
 			archiver.extract(patchFile.toFile(), solrDestFolder.resolve(relPatchDest).toFile());  
@@ -128,6 +152,8 @@ public class LocalSolrInstaller {
 					ServiceTestStatus.UNKNOWN_ERROR, 
 					"Error Adding Inpher Core to "+solrDestFolder,e);
 		}
+		if (Thread.currentThread()==KillableThread.runningThread && KillableThread.runningThread.killRequest) 
+			return ServiceTestResult.createFailure(ServiceTestStatus.UNKNOWN_ERROR,"aborted");
 		progress.onProgress(endPatchPercent,"Starting Solr Server!");
 		try { 
 			AutoconfInpherClientUtils.startLocalSolr(solrDestFolder, "start");
@@ -136,7 +162,18 @@ public class LocalSolrInstaller {
 					ServiceTestStatus.UNKNOWN_ERROR, 
 					"Error starting Solr",e);			
 		}
-		progress.onProgress(endBootPercent,"Solr installation finished!");		
-		return ServiceTestResult.createSuccess();
+		if (Thread.currentThread()==KillableThread.runningThread && KillableThread.runningThread.killRequest) 
+			return ServiceTestResult.createFailure(ServiceTestStatus.UNKNOWN_ERROR,"aborted");
+		progress.onProgress(endBootPercent,"Testing the new Solr Installation!");		
+		try { 
+			ServiceTestResult finalResult = AutoconfInpherClientUtils.testSolr(icp, (x,message)->{
+				progress.onProgress(endBootPercent+x*coefTestPercent, message);
+			});
+			return finalResult;
+		} catch (Exception e) {
+			return ServiceTestResult.createFailure(
+					ServiceTestStatus.UNKNOWN_ERROR, 
+					"The new solr installation does not work",e);
+		}
 	}
 }

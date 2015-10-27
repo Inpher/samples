@@ -1,7 +1,7 @@
 package application;
 
 public class KillableThread extends Thread {
-	boolean killRequest;
+	public boolean killRequest;
 	public static KillableThread runningThread;
 	
 	public KillableThread() {

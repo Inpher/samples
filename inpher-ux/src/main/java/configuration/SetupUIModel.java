@@ -17,6 +17,9 @@
 package configuration;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.inpher.clientapi.InpherProgressListener;
 import org.inpher.clientimpl.utils.AutoconfInpherClientUtils;
@@ -29,6 +32,7 @@ import org.inpher.clientimpl.utils.SolrInstallType;
 
 import application.KillableThread;
 import javafx.application.Platform;
+import utils.Utils;
 
 //In the control panel, we will use the logical state of the GUI to store the logical state of the application
 public abstract class SetupUIModel {
@@ -243,8 +247,23 @@ public abstract class SetupUIModel {
 		}
 		
 		private void doTestLocalSolrConfiguration() {
-			showProgressPopup("Testing Local Solr Configuration");
 			InpherConfigProperties icp = getEverything();
+			if (icp.isAutoRebootSolr()) {
+				//check solr base folder
+				String solrBase = icp.getLocalSolrRootFolder();
+				if (Utils.isNullOrEmpty(solrBase)) {
+					showErrorAlert("Solr root folder is not given");
+					return;
+				}
+				Path solrBasePath = Paths.get(solrBase);
+				if (Files.exists(solrBasePath.resolve("bin/solr"))) {
+					String newSolrBase = solrBasePath.getParent().toString();
+					icp.setLocalSolrRootFolder(newSolrBase);
+					setLocalSolrRootFolder(newSolrBase);
+					saveEverythingTo(icp);
+				}
+			}			
+			showProgressPopup("Testing Local Solr Configuration");
 			asyncRun(new KillableThread() {
 				public void run() {
 					ServiceTestResult solrStatus = AutoconfInpherClientUtils.testSolr(icp, uiProgressListener);
@@ -353,7 +372,8 @@ public abstract class SetupUIModel {
 		
 		public void killActiveThread() {
 			KillableThread.runningThread.requestKill();
-			// KillableThread.runningThread.join(); 
+			try { KillableThread.runningThread.join(); }
+			catch (InterruptedException e) {}
 		}
 		
 		private void asyncRun(KillableThread x) {

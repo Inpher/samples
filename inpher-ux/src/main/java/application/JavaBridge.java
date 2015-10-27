@@ -160,8 +160,7 @@ public class JavaBridge {
         } catch (Exception e) {
         	e.printStackTrace();
         }
-    	System.err.println("ERROR!!!");
-        if (inpherClient==null) {
+    	if (inpherClient==null) {
         	Alert a = new Alert(AlertType.ERROR);
         	a.setContentText(
         			"The inpher Client has not been generated\n"

@@ -16,9 +16,11 @@
 
 package utils;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.Socket;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -27,6 +29,8 @@ import java.nio.channels.WritableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import org.inpher.clientimpl.utils.AutoconfInpherClientUtils;
 import org.slf4j.Logger;
@@ -78,6 +82,52 @@ public class Utils {
 		return s==null || s.isEmpty();
 	}
 	
+	public static boolean isLocalPortInUse(int port) {
+		  try {
+		    (new Socket("127.0.0.1", port)).close();
+		    return true;
+		  }
+		  catch(IOException e) {
+			  return false;
+		  }
+	}
+	
+	/**
+     * Verifies file's SHA256 checksum
+     * @param Filepath and name of a file that is to be verified
+     * @param testChecksum the expected checksum
+     * @return true if the expeceted SHA256 checksum matches the file's SHA256 checksum; false otherwise.
+     * @throws NoSuchAlgorithmException
+     * @throws IOException
+     */
+    public static boolean verifyChecksum(String file, String testChecksum) {
+    	try {
+        MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
+        FileInputStream fis = new FileInputStream(file);
+  
+        byte[] data = new byte[1024];
+        int read = 0; 
+        while ((read = fis.read(data)) != -1) {
+            sha256.update(data, 0, read);
+        };
+        fis.close();
+        byte[] hashBytes = sha256.digest();
+  
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < hashBytes.length; i++) {
+          sb.append(Integer.toString((hashBytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+         
+        String fileHash = sb.toString();
+         
+        return fileHash.equals(testChecksum);
+    	} catch (NoSuchAlgorithmException e) {
+    		e.printStackTrace();
+    		return false;
+    	} catch (IOException e) {
+    		return false;
+    	}
+    }
 
 	
 }
