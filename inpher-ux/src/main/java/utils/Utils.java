@@ -57,19 +57,19 @@ public class Utils {
 			wbc.write(buffer);
 			buffer.clear();
 			if (listener!=null && totalRead>nextListenerRead) {
-				if (listener.onProgress(100*totalRead/totalLengthD)
+				if (listener.onProgress(totalRead/totalLengthD)
 						==DownloadProgressResult.ABORT) break;
 				nextListenerRead+=chunks;
 			}
 		}
-		listener.onProgress(100*totalRead/totalLengthD);
+		listener.onProgress(totalRead/totalLengthD);
 		wbc.close();
 		rbc.close();
 	}
 	public static void downloadWithProgressListener(URL source, Path destination) throws IOException {
 		downloadWithProgressListener(source, destination,
 				(x)->{
-					System.out.format("[ Downloading: %5.1f %% ]\r",x);
+					System.out.format("[ Downloading: %5.1f %% ]\r",100*x);
 					return DownloadProgressResult.CONTINUE;
 				});
 	}

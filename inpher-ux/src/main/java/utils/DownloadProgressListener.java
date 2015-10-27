@@ -18,5 +18,5 @@ package utils;
 
 @FunctionalInterface
 public interface DownloadProgressListener {
-	public DownloadProgressResult onProgress(double percent);
+	public DownloadProgressResult onProgress(double progress);
 }
