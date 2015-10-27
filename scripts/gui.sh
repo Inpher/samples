@@ -1,1 +1,4 @@
-java -cp "../lib/*" application.Main
+#!/bin/sh
+
+BASEDIR=$(dirname "$0")
+java -cp "$BASEDIR/../lib/*" application.Main

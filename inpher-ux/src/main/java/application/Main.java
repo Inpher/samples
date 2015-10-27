@@ -50,6 +50,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		Path appTmpDir = Utils.getAppTmpDir();
+		javaBridge.initializeInpherClient();
 		try {
 			WebView webview = new WebView();
 			webview.setContextMenuEnabled(false);
