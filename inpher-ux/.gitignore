@@ -1,0 +1,8 @@
+/bin/
+/target/
+.*.swp
+demokeys
+*.csv
+demorootfolder
+tmp
+localsolr

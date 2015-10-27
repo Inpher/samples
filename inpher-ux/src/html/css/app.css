@@ -1,0 +1,248 @@
+html,body {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 1200px;
+    height: 800px;
+    margin: 0px;
+    padding: 0px;
+    font-family: arial;
+}
+
+body {}
+
+.backpanelayer {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 1200px;
+    height: 800px;
+    background-repeat: no-repeat;
+}
+
+.page {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    margin: 0px;
+    padding: 0px;
+    width: 0px;
+    height: 0px;
+}
+
+input[type=submit] {
+    width: 0px; height: 0px;
+}
+input[type=text],input[type=password] {
+    display: block; background: none; border: none; 
+    font-size: 14pt;
+}
+input[type=text]:focus,input[type=password]:focus {
+    background: none; border: none;
+    outline: 0;
+}
+input[type=text]:active,input[type=password]:active {
+    background: none; border: none;
+    outline: 0;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #d1d3d4;
+    text-align: center;
+    font-style: italic;
+}
+
+/* Styles specific to the search result page */
+#fileList {
+    width: 100%;
+    border-collapse: collapse;
+    display: block;
+}
+#fileListContent {
+    width: 100%;
+    height: 325px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: block;
+}
+
+#fileListContent td{
+     /* border: thin red solid; */ 
+}
+
+#fileListContent>tr {
+    height: 24px;
+    width: 100%;
+    font-size: small;
+    cursor: pointer;
+    overflow: hidden;
+}
+#fileListContent>tr:hover {
+    background-color: #ffd;
+}
+#fileListContent>tr.ui-selected {
+    background: #efe;
+}
+#fileListContent>tr.ui-selecting {
+    background: #cfc;
+}
+
+#fileListContent td.fitem-content {
+    overflow: hidden;
+    height: 24px;
+    width: 376px;
+}
+
+#fileListContent td.fitem-icon {
+    width: 24px;
+    height: 24px;
+    background-image: url("../images/text-plain.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: center;
+}
+
+#fileListContent>tr[data-mimetype="folder"]>td.fitem-icon {
+    background-image: url("../images/folder24.png");
+}
+#fileListContent>tr[data-mimetype="application/pdf"]>td.fitem-icon {
+    background-image: url("../images/application-pdf.svg");
+}
+
+/* Styles specific to the search result page */
+#searchResults {
+    width: 100%;
+    border-collapse: collapse;
+    display: block;
+}
+#searchResultsContent {
+    width: 100%;
+    height: 330px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: block;
+}
+
+#searchResultsContent td{
+     /* border: thin red solid; */ 
+}
+
+#searchResultsContent>tr {
+    height: 24px;
+    width: 100%;
+    font-size: small;
+    cursor: pointer;
+    overflow: hidden;
+}
+#searchResultsContent>tr:hover {
+    background-color: #ffd;
+}
+#searchResultsContent>tr.ui-selected {
+    background: #efe;
+}
+#searchResultsContent>tr.ui-selecting {
+    background: #cfc;
+}
+
+#searchResultsContent td.fitem-score {
+    font-size: small;
+    font-style: italic;
+    color: #808285;
+    text-align: right;
+}
+
+#searchResultsContent td.fitem-content {
+    overflow: hidden;
+    height: 24px;
+    width: 376px;
+}
+
+#searchResultsContent td.fitem-icon {
+    width: 24px;
+    height: 24px;
+    background-image: url("../images/text-plain.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: center;
+}
+
+#searchResultsContent>tr[data-mimetype="folder"]>td.fitem-icon {
+    background-image: url("../images/folder24.png");
+}
+#searchResultsContent>tr[data-mimetype="application/pdf"]>td.fitem-icon {
+    background-image: url("../images/application-pdf.svg");
+}
+
+
+/* Styles specific to the waiting popup */
+#wp1 {
+    width: 100%;
+    min-height: 64px;
+}
+
+#wp1icon {
+    width: 64px;
+    height: 64px;
+    background-image: url("../images/waiting3.gif");
+    background-position: 50% 50%;
+    background-size: 48px 48px;
+    background-repeat: no-repeat;
+    vertical-align: center;
+}
+
+#wp1content {
+    vertical-align: center;
+/*	background-color: #fff; */
+}
+
+/* Styles specific to the upload popup */
+#upl1 {
+    width: 100%;
+    min-height: 64px;
+}
+
+#upl1icon {
+    width: 64px;
+    height: 64px;
+    background-image: url("../images/waiting3.gif");
+    background-position: 50% 50%;
+    background-size: 48px 48px;
+    background-repeat: no-repeat;
+    vertical-align: center;
+}
+
+#upl1title {
+    vertical-align: center;
+    font-weight: bold;
+}
+#upl1content {
+    vertical-align: center;
+}
+
+.no-titlebar .ui-dialog-titlebar {
+  display:none;
+}
+
+/* Styles specific to the error popup */
+#errp1 {
+    width: 100%;
+    min-height: 64px;
+}
+
+#errp1icon {
+    width: 64px;
+    min-height: 64px;
+    background-image: url("../images/error48.png");
+    background-position: 50% 0%;
+    background-size: 48px 48px;
+    background-repeat: no-repeat;
+    vertical-align: top;
+}
+
+#errp1content {
+    vertical-align: top;
+}
+
+
