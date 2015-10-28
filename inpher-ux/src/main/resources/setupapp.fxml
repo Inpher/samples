@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -18,13 +19,23 @@
                      </toggleGroup></RadioButton>
                   <RadioButton fx:id="existingLocalSolrRadioButton" layoutX="196.0" layoutY="198.0" mnemonicParsing="false" onAction="#onExistingLocalSolrSelection" text="Existing local Solr installation" toggleGroup="$Solr" />
                   <RadioButton fx:id="remoteSolrRadioButton" layoutX="196.0" layoutY="226.0" mnemonicParsing="false" onAction="#onRemoteSolrSelection" text="Remote Solr installation" toggleGroup="$Solr" />
+                  <ImageView fitHeight="126.0" fitWidth="207.0" layoutX="20.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Logo_Web_Small.png" />
+                     </image>
+                  </ImageView>
                </children>
             </AnchorPane>
             <AnchorPane fx:id="newLocalSolrPane" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
-                  <Button layoutX="450.0" layoutY="133.0" mnemonicParsing="false" onAction="#onBrowse" text="Browse" />
-                  <Label layoutX="81.0" layoutY="138.0" text="Local Solr Installation Location:" />
-		  <TextField fx:id="localSolrInstallLocationTextField" layoutX="276.0" layoutY="133.0" onAction="#onChange" />
+                  <Button layoutX="451.0" layoutY="202.0" mnemonicParsing="false" onAction="#onBrowse" text="Browse" />
+                  <Label layoutX="83.0" layoutY="207.0" text="Local Solr Installation Location:" />
+		  <TextField fx:id="localSolrInstallLocationTextField" layoutX="278.0" layoutY="202.0" onAction="#onChange" />
+                  <ImageView fitHeight="126.0" fitWidth="207.0" layoutX="20.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Logo_Web_Small.png" />
+                     </image>
+                  </ImageView>
 		  <!--
                   <ButtonBar layoutX="81.0" layoutY="173.0" prefHeight="40.0" prefWidth="432.0">
                      <buttons>
@@ -43,6 +54,11 @@
                   <TextField fx:id="existingLocalSolrFolderTextField" layoutX="294.0" layoutY="168.0" prefHeight="26.0" prefWidth="196.0" />
                   <TextField fx:id="existingLocalSolrUrlTextField" layoutX="294.0" layoutY="123.0" prefHeight="26.0" prefWidth="265.0" />
                   <Label layoutX="191.0" layoutY="128.0" text="Local Solr URL:" />
+                  <ImageView fitHeight="126.0" fitWidth="207.0" layoutX="20.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Logo_Web_Small.png" />
+                     </image>
+                  </ImageView>
                </children>
             </AnchorPane>
             <AnchorPane fx:id="remoteSolrPane" prefHeight="200.0" prefWidth="200.0" visible="false">
@@ -57,11 +73,16 @@
                   <TextField fx:id="trustStorePasswordTextField" layoutX="377.0" layoutY="304.0" prefHeight="26.0" prefWidth="134.0" />
                   <Button fx:id="keyStoreBrowseButton" layoutX="520.0" layoutY="214.0" mnemonicParsing="false" text="Browse" />
                   <Button fx:id="trustStoreBrowseButton" layoutX="521.0" layoutY="274.0" mnemonicParsing="false" text="Browse" />
-                  <Label layoutX="58.0" layoutY="124.0" text="Specify the remote Solr Server URL: " />
-                  <TextField fx:id="remoteSolrUrlTextfield" layoutX="286.0" layoutY="119.0" prefHeight="26.0" prefWidth="224.0" />
+                  <Label layoutX="59.0" layoutY="165.0" text="Specify the remote Solr Server URL: " />
+                  <TextField fx:id="remoteSolrUrlTextfield" layoutX="287.0" layoutY="161.0" prefHeight="26.0" prefWidth="224.0" />
+                  <ImageView fitHeight="126.0" fitWidth="207.0" layoutX="20.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Logo_Web_Small.png" />
+                     </image>
+                  </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="storageRadioPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+            <AnchorPane fx:id="storageRadioPane" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <RadioButton fx:id="localStorageRadioButton" layoutX="204.0" layoutY="180.0" mnemonicParsing="false" onAction="#onLocalDataStorageSelection" prefHeight="18.0" prefWidth="177.0" text="Local Data Storage (EFS)">
                      <toggleGroup>
@@ -70,6 +91,11 @@
                   </RadioButton>
                   <RadioButton fx:id="S3StorageRadioButton" layoutX="204.0" layoutY="203.0" mnemonicParsing="false" onAction="#onS3StorageSelection" prefHeight="18.0" prefWidth="177.0" text="Amazon S3 Storage (EFS)" toggleGroup="$Storage" />
                   <Label layoutX="204.0" layoutY="153.0" text="Select your storage type:" />
+                  <ImageView fitHeight="126.0" fitWidth="207.0" layoutX="20.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Logo_Web_Small.png" />
+                     </image>
+                  </ImageView>
                </children>
             </AnchorPane>
             <AnchorPane fx:id="localStoragePane" prefHeight="200.0" prefWidth="200.0" visible="false">
@@ -77,9 +103,14 @@
                   <Label layoutX="53.0" layoutY="172.0" text="Select your local Storage Root:" />
                   <Button fx:id="localStorageRootBrowseButton" layoutX="415.0" layoutY="167.0" mnemonicParsing="false" onAction="#onLocalStorageRootBrowseButton" text="Browse" />
                   <TextField fx:id="localStorageRootTextField" layoutX="245.0" layoutY="167.0" />
+                  <ImageView fitHeight="126.0" fitWidth="207.0" layoutX="20.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Logo_Web_Small.png" />
+                     </image>
+                  </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="S3StoragePane" prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="S3StoragePane" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <CheckBox fx:id="defaultAWSConfigurationCheckBox" layoutX="174.0" layoutY="154.0" mnemonicParsing="false" onAction="#onDefaultAWSConfiguration" text="Use default AWS Configuration" />
                   <Label layoutX="174.0" layoutY="271.0" text="AWS Bucket Name:" />
@@ -90,6 +121,11 @@
                   <TextField fx:id="awsSecretKeyTextField" layoutX="301.0" layoutY="236.0" />
                   <TextField fx:id="awsBucketNameTextField" layoutX="301.0" layoutY="266.0" />
                   <Label layoutX="185.0" layoutY="211.0" text="AWS Access Key:" />
+                  <ImageView fitHeight="126.0" fitWidth="207.0" layoutX="20.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Logo_Web_Small.png" />
+                     </image>
+                  </ImageView>
                </children>
             </AnchorPane>
          </children>
