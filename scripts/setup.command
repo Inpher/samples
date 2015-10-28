@@ -1,2 +1,2 @@
 cd "`dirname "$0"`"
-java -cp "../lib/*" application.SetupApp
+sh setup.sh

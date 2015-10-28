@@ -6,6 +6,7 @@ rm -rf ~/.m2/repository/org/inpher/*
 (cd inpher-ux; mvn package) || exit 1
 rm -rf inpher-sdk
 mkdir inpher-sdk 
+cp -r base/* inpher-sdk/
 mkdir inpher-sdk/bin
 cp scripts/setup.sh inpher-sdk/bin/
 cp scripts/setup.command inpher-sdk/bin/
@@ -22,7 +23,6 @@ cp inpher-samples/pom.xml inpher-sdk/inpher-samples/
 cp -r inpher-samples/src inpher-sdk/inpher-samples/
 #copy dependencies
 mkdir inpher-sdk/lib
-cp scripts/pom.xml inpher-sdk/lib
 cp inpher-ux/target/inpher-ux-0.6.jar inpher-sdk/lib/
 if [ "x$1" = "x" ]; then
     rm inpher-sdk-with-dependencies.zip
