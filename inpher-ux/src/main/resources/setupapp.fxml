@@ -82,7 +82,7 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="storageRadioPane" prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="storageRadioPane" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <RadioButton fx:id="localStorageRadioButton" layoutX="204.0" layoutY="180.0" mnemonicParsing="false" onAction="#onLocalDataStorageSelection" prefHeight="18.0" prefWidth="177.0" text="Local Data Storage (EFS)">
                      <toggleGroup>
@@ -110,9 +110,9 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="S3StoragePane" prefHeight="200.0" prefWidth="200.0" visible="false">
+            <AnchorPane fx:id="S3StoragePane" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <CheckBox fx:id="defaultAWSConfigurationCheckBox" layoutX="174.0" layoutY="154.0" mnemonicParsing="false" onAction="#onDefaultAWSConfiguration" text="Use default AWS Configuration" />
+                  <CheckBox fx:id="defaultAWSConfigurationCheckBox" layoutX="174.0" layoutY="154.0" mnemonicParsing="false" onAction="#onDefaultAWSConfiguration" text="Check if AWS credentials are installed globally" />
                   <Label layoutX="174.0" layoutY="271.0" text="AWS Bucket Name:" />
                   <!-- <Label layoutX="212.0" layoutY="301.0" text="AWS Region:" />  -->
                   <Label layoutX="189.0" layoutY="242.0" prefWidth="102.0" text="AWS Secret Key:" />
