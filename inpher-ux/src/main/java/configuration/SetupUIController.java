@@ -37,7 +37,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.inpher.clientimpl.utils.CloudStorageType;
-import org.inpher.clientimpl.utils.SolrInstallType;
+import org.inpher.clientimpl.utils.SearchServerType;
 
 import com.amazonaws.regions.Regions;
 
@@ -234,7 +234,7 @@ public class SetupUIController extends SetupUIModel implements Initializable {
 	}
 
 	@Override
-	public SolrInstallType getSolrInstallationType() {
+	public SearchServerType getSolrInstallationType() {
 		if (newLocalSolrRadioButton.isSelected()) return INSTALL_SOLR_LOCALLY;
 		if (existingLocalSolrRadioButton.isSelected()) return LOCAL_SOLR;
 		if (remoteSolrRadioButton.isSelected()) return REMOTE_SOLR;
@@ -242,7 +242,7 @@ public class SetupUIController extends SetupUIModel implements Initializable {
 	}
 
 	@Override
-	public void setSolrInstallationType(SolrInstallType solrInstallationType) {
+	public void setSolrInstallationType(SearchServerType solrInstallationType) {
 		switch(solrInstallationType) {
 		case INSTALL_SOLR_LOCALLY: newLocalSolrRadioButton.setSelected(true); return;
 		case LOCAL_SOLR: existingLocalSolrRadioButton.setSelected(true); return;

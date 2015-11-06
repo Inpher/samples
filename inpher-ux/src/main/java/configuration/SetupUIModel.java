@@ -28,7 +28,7 @@ import org.inpher.clientimpl.utils.DefaultInpherProgressListener;
 import org.inpher.clientimpl.utils.InpherConfigProperties;
 import org.inpher.clientimpl.utils.ServiceTestResult;
 import org.inpher.clientimpl.utils.ServiceTestStatus;
-import org.inpher.clientimpl.utils.SolrInstallType;
+import org.inpher.clientimpl.utils.SearchServerType;
 
 import application.KillableThread;
 import javafx.application.Platform;
@@ -38,9 +38,9 @@ import utils.Utils;
 public abstract class SetupUIModel {
 		public static final CloudStorageType LOCAL_STORAGE=CloudStorageType.LOCAL_STORAGE;
 		public static final CloudStorageType AMAZONS3_STORAGE=CloudStorageType.AMAZONS3_STORAGE;
-		public static final SolrInstallType LOCAL_SOLR=SolrInstallType.LOCAL_SOLR;
-		public static final SolrInstallType REMOTE_SOLR=SolrInstallType.REMOTE_SOLR;
-		public static final SolrInstallType INSTALL_SOLR_LOCALLY=SolrInstallType.INSTALL_SOLR_LOCALLY;
+		public static final SearchServerType LOCAL_SOLR=SearchServerType.LOCAL_SOLR;
+		public static final SearchServerType REMOTE_SOLR=SearchServerType.REMOTE_SOLR;
+		public static final SearchServerType INSTALL_SOLR_LOCALLY=SearchServerType.INSTALL_SOLR_LOCALLY;
 
 		public InpherProgressListener uiProgressListener;
 		
@@ -60,8 +60,8 @@ public abstract class SetupUIModel {
 		public abstract void setAmazonS3RegionName(String amazonS3RegionName);
 		public abstract String getAmazonS3BucketName();
 		public abstract void setAmazonS3BucketName(String amazonS3BucketName);
-		public abstract SolrInstallType getSolrInstallationType();
-		public abstract void setSolrInstallationType(SolrInstallType solrInstallationType);
+		public abstract SearchServerType getSolrInstallationType();
+		public abstract void setSolrInstallationType(SearchServerType solrInstallationType);
 		public abstract String getSolrURL();
 		public abstract void setSolrURL(String solrURL);
 		public abstract String getLocalSolrRootFolder();
