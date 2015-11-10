@@ -234,7 +234,7 @@ public class SetupUIController extends SetupUIModel implements Initializable {
 	}
 
 	@Override
-	public SearchServerType getSolrInstallationType() {
+	public SearchServerType getSearchServerType() {
 		if (newLocalSolrRadioButton.isSelected()) return INSTALL_SOLR_LOCALLY;
 		if (existingLocalSolrRadioButton.isSelected()) return LOCAL_SOLR;
 		if (remoteSolrRadioButton.isSelected()) return REMOTE_SOLR;

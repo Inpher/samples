@@ -60,7 +60,7 @@ public abstract class SetupUIModel {
 		public abstract void setAmazonS3RegionName(String amazonS3RegionName);
 		public abstract String getAmazonS3BucketName();
 		public abstract void setAmazonS3BucketName(String amazonS3BucketName);
-		public abstract SearchServerType getSolrInstallationType();
+		public abstract SearchServerType getSearchServerType();
 		public abstract void setSolrInstallationType(SearchServerType solrInstallationType);
 		public abstract String getSolrURL();
 		public abstract void setSolrURL(String solrURL);
@@ -104,7 +104,7 @@ public abstract class SetupUIModel {
 			setAmazonS3SecretAccessKey(icp.getAmazonS3SecretAccessKey());
 			setAmazonS3RegionName(icp.getAmazonS3RegionName());
 			setAmazonS3BucketName(icp.getAmazonS3BucketName());
-			setSolrInstallationType(icp.getSolrInstallationType());
+			setSolrInstallationType(icp.getSearchServerType());
 			setSolrURL(icp.getSolrURL());
 			setLocalSolrRootFolder(icp.getLocalSolrRootFolder());
 			setAutoRebootSolr(icp.isAutoRebootSolr());
@@ -122,7 +122,7 @@ public abstract class SetupUIModel {
 			icp.setAmazonS3SecretAccessKey(getAmazonS3SecretAccessKey());
 			icp.setAmazonS3RegionName(getAmazonS3RegionName());
 			icp.setAmazonS3BucketName(getAmazonS3BucketName());
-			icp.setSolrInstallationType(getSolrInstallationType());
+			icp.setSolrInstallationType(getSearchServerType());
 			icp.setSolrURL(getSolrURL());
 			icp.setLocalSolrRootFolder(getLocalSolrRootFolder());
 			icp.setAutoRebootSolr(isAutoRebootSolr());
@@ -143,7 +143,7 @@ public abstract class SetupUIModel {
 		protected void showNextPage() {
 			switch (getActivePanel()) {			
 			case SOLR_TYPE_CHOICE:
-				switch (getSolrInstallationType()) {
+				switch (getSearchServerType()) {
 				case LOCAL_SOLR:
 					setActivePanel(UIActivePanel.LOCAL_SOLR_CONFIGURATION);
 					return;
