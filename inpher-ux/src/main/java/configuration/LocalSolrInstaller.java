@@ -47,12 +47,13 @@ import utils.Utils;
 public class LocalSolrInstaller {
 	public static final String patchURL = "http://www.inpher.io/files/inpher-frequency.tgz"; 
 	public static final String patchSHA256 = 
-			"b9fae3ac0e0b349a7ad9bbd6ccdd0e1e137ea9973007836cadf1b7ab50afdfaf";
+			"fed01424df362b75686cd98628008c10021fa8e2ac219fe2d740a4cdc41d7f52";
 	public static final String solrDownloadURL = 
 			"http://mirror.switch.ch/mirror/apache/dist/lucene/solr/5.3.1/solr-5.3.1.tgz";
 	public static final String solrDownloadSHA256 = 
 			"34ddcac071226acd6974a392af7671f687990aa1f9eb4b181d533ca6dca6f42d";
-	public static final String relPatchDest = "solr-5.3.1/server/solr/";  
+	public static final String relPatchDest = "solr-5.3.1/server/solr/"; 
+	public static final String relPatchSolrCmdStr = "solr-5.3.1/bin/"; 
 	public static final String solrInstallBaseUrl="http://localhost:8983/solr/inpher-frequency"; 
 	/**
 	 * 
@@ -146,7 +147,9 @@ public class LocalSolrInstaller {
 			return ServiceTestResult.createFailure(ServiceTestStatus.UNKNOWN_ERROR,"aborted");
 		progress.onProgress(endUnzipPercent,"Adding inpher core to "+solrDestFolder);
 		try {
-			archiver.extract(patchFile.toFile(), solrDestFolder.resolve(relPatchDest).toFile());  
+			archiver.extract(patchFile.toFile(), solrDestFolder.resolve(relPatchDest).toFile()); 
+			Files.copy(solrDestFolder.resolve(relPatchDest).resolve("inpher-frequency/bin/solr.cmd"), 
+					solrDestFolder.resolve(relPatchSolrCmdStr));
 		} catch (IOException e) {
 			return ServiceTestResult.createFailure(
 					ServiceTestStatus.UNKNOWN_ERROR, 
