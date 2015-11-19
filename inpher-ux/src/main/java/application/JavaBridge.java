@@ -538,4 +538,9 @@ public class JavaBridge {
 	public void setWindow(JSObject window) {
 		this.window=window;
 	}
+
+	public void close() {
+		inpherClient.close();
+		Platform.exit();
+	}
 }

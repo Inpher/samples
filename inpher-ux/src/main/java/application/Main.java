@@ -32,11 +32,13 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker.State;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.Dragboard;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import netscape.javascript.JSObject;
 import utils.Utils;
 
@@ -66,6 +68,10 @@ public class Main extends Application {
 			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			primaryStage.setOnCloseRequest(event-> {
+					javaBridge.close();
+				}
+			);
 	        // Dropping over surface
 	        webview.setOnDragEntered((event) -> {
 	        	Dragboard db = event.getDragboard();

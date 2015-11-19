@@ -24,6 +24,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import org.inpher.clientapi.InpherProgressListener;
 import org.inpher.clientimpl.utils.AutoconfInpherClientUtils;
@@ -120,7 +121,7 @@ public class LocalSolrInstaller {
 		Path patchFile = Utils.getAppTmpDir().resolve("patches.tgz"); 
 		try {
 			URL patchesPath = new URL(patchURL);
-			if (!Files.exists(patchFile) || !Utils.verifyChecksum(solrZipFile.toString(), patchSHA256))
+			if (!Files.exists(patchFile) || !Utils.verifyChecksum(patchFile.toString(), patchSHA256))
 				Utils.downloadWithProgressListener(patchesPath, patchFile, x -> {
 					progress.onProgress(endSolrDownloadPercent+x*coefPatchDownloadPercent, messagePatchDownload);
 					if (Thread.currentThread()==KillableThread.runningThread && KillableThread.runningThread.killRequest) 
@@ -149,7 +150,7 @@ public class LocalSolrInstaller {
 		try {
 			archiver.extract(patchFile.toFile(), solrDestFolder.resolve(relPatchDest).toFile()); 
 			Files.copy(solrDestFolder.resolve(relPatchDest).resolve("inpher-frequency/bin/solr.cmd"), 
-					solrDestFolder.resolve(relPatchSolrCmdStr));
+					solrDestFolder.resolve(relPatchSolrCmdStr),StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			return ServiceTestResult.createFailure(
 					ServiceTestStatus.UNKNOWN_ERROR, 
