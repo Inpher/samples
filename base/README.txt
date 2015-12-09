@@ -30,3 +30,19 @@ This product requires additional third party libraries, licensed
 independently from this product. Please refer to these libraries directly
 for their respective licensing information.
 
+Running the samples
+====================
+
+Setup your environment:
+-----------------------
+1. mvn dependency:copy-dependencies
+2. create a config.properties configuration file:
+    java -cp 'target/dependency/*' org.inpher.clientapi.GenerateConfigProperties
+3. manually edit the config.properties file to point it to your backend
+
+Compile and run your project
+----------------------------
+4. mvn compile
+5. execute your project
+    java -cp 'target/classes:target/dependency/*' your.main.Class
+

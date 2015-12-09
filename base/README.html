@@ -111,5 +111,23 @@ body, div, p, td, th {
 </ul>
 <p>See <a href="http://inpher.io/beta">http://inpher.io/beta</a> for more information.</p>
 <p><i>This product requires additional third party libraries, licensed independently from this product. Please refer to these libraries directly for their respective licensing information.</i></p>
+
+<h2>Running the samples</h2>
+
+<h3>Setup your environment:</h3>
+<ol>
+<li>mvn dependency:copy-dependencies</li>
+<li>create a config.properties configuration file:<br>
+    java -cp 'target/dependency/*' org.inpher.clientapi.GenerateConfigProperties</li>
+<li>manually edit the config.properties file to point it to your backend</li>
+</ol>
+
+<h3>Compile and run your project</h3>
+<ol>
+<li>mvn compile</li>
+<li>execute your project<br>
+    java -cp 'target/classes:target/dependency/*' your.main.Class</li>
+</ol>
+
 </body>
 </html>
