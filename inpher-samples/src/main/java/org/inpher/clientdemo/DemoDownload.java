@@ -36,7 +36,7 @@ public class DemoDownload {
 	private static String pwd = "mypwd"; 				// set your password 
 
 	private static String dest = "medicalmixed"; 		// set your destination directory 
-	private static String source = "medicalmixed"; 		// set your source directory 
+	private static String source = "medicalbis"; 		// set your source directory 
 	private static Boolean overwriteFiles = true; 		// set whether you would like files to be overwritten
 
 	public static void main(String[] args) throws Exception {
