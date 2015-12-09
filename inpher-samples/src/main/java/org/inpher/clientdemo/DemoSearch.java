@@ -41,7 +41,7 @@ public class DemoSearch {
 		DecryptedSearchResponse res = inpherClient.search(kwds);
 		// display the search results 
 		for (RankedSearchResult e : res.getDocumentIds()) {
-			System.out.format("%6.1f\t%s\n", e.getScore(), e.getDocId());
+			System.out.format("%6.4f\t%s\n", e.getScore(), e.getDocId());
 		}
 	}
 }
