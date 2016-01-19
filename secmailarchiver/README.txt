@@ -8,7 +8,7 @@ Amazon s3 without losing the ability to search for specific emails based on keyw
 A searchable encryption scheme is used to search the archive on s3 without 
 downloading the encrypted archive.
 
-Note: inpher.io/wiki
+Note: https://www.inpher.io/wiki
 Please consult the Inpher documentation regarding the security of this software
 and to get familiar with the initial configuration.
 You need to setup the "config.properties" file to define the storage and search 
