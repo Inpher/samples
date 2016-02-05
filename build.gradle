@@ -1,0 +1,23 @@
+group 'org.inpher'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+mainClassName = "org.inpher.sampleapp.Main"
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven {
+        url "http://inpher.io/maven"
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile 'org.mockito:mockito-core:1.+'
+    compile 'org.inpher:clientapi:0.6-beta'
+    compile 'org.inpher:clientimpl:0.6-beta'
+}

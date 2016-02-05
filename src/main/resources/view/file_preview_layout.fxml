@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.inpher.sampleapp.controller.FilePreviewController">
+    <children>
+        <HBox alignment="CENTER">
+            <children>
+                <Label fx:id="documentName" alignment="TOP_LEFT" contentDisplay="RIGHT" text="Name">
+                    <font>
+                        <Font size="36.0" />
+                    </font>
+                </Label>
+            </children>
+        </HBox>
+        <GridPane alignment="CENTER" VBox.vgrow="ALWAYS">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints halignment="RIGHT" hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            </rowConstraints>
+            <children>
+                <Label text="Size:">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label text="Type:" GridPane.rowIndex="1">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label text="Path:" GridPane.rowIndex="3">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label text="Owner:" GridPane.rowIndex="4">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label fx:id="sizeLabel" text="Label" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label fx:id="typeLabel" text="Label" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label fx:id="pathLabel" text="Label" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="3">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label fx:id="ownerLabel" text="Label" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </GridPane.margin>
+                </Label>
+            <Label text="Content Type:" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin>
+            </Label>
+            <Label fx:id="contentTypeLabel" text="Label" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin>
+            </Label>
+            </children>
+            <padding>
+                <Insets bottom="30.0" top="30.0" />
+            </padding>
+        </GridPane>
+        <HBox alignment="CENTER" VBox.vgrow="NEVER">
+            <children>
+                <Button fx:id="openButton" mnemonicParsing="false" text="Open" />
+            </children>
+        </HBox>
+    </children>
+    <padding>
+        <Insets bottom="50.0" left="30.0" right="30.0" top="60.0" />
+    </padding>
+    <opaqueInsets>
+        <Insets />
+    </opaqueInsets>
+</VBox>
