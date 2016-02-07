@@ -16,29 +16,38 @@
 
 package org.inpher.sampleapp.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import org.inpher.clientapi.DecryptedSearchResponse;
+import org.inpher.clientapi.RankedSearchResult;
 import org.inpher.sampleapp.model.ClientManager;
 import org.inpher.sampleapp.model.SearchManager;
 import org.inpher.sampleapp.model.SearchResultObserver;
+import org.inpher.sampleapp.view.SearchResultView;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * Created by sduc on 2/3/16.
+ *
  */
 public class MainController implements Initializable, SearchResultObserver {
 
     private ClientManager clientManager;
 
     private SearchManager searchManager;
+
+    private SearchResultView srv;
+    private boolean isSearching = false;
+    private Node fileTreeNode;
 
     @FXML
     private AnchorPane fileTreePane;
@@ -54,10 +63,12 @@ public class MainController implements Initializable, SearchResultObserver {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //fileTreeController.update();
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             searchManager.setSearchContent(newValue);
         });
+
+        srv = new SearchResultView();
+        fileTreeNode = fileTreePane.getChildren().get(0);
     }
 
     public void initClientManager(ClientManager clientManager) {
@@ -68,7 +79,6 @@ public class MainController implements Initializable, SearchResultObserver {
 
         this.fileTreeController.addObserver(filePreviewController);
 
-        // TODO: move this around
         fileTreeController.update();
     }
 
@@ -103,6 +113,39 @@ public class MainController implements Initializable, SearchResultObserver {
 
     @Override
     public void notify(DecryptedSearchResponse searchResult) {
-        System.out.println(searchResult);
+        showSearchResult(searchResult.getDocumentIds());
     }
+
+    @Override
+    public void stopSearching() {
+        showFileTreeView();
+    }
+
+    private void showSearchResult(List<RankedSearchResult> documentIds) {
+        // we cannot run this in that thread. It needs to be in the FX main application thread.
+        Platform.runLater(() -> {
+            srv.getController().updateSearchResult(documentIds);
+
+            Node node = srv.getNode();
+            AnchorPane.setTopAnchor(node, 0.0);
+            AnchorPane.setLeftAnchor(node, 0.0);
+            AnchorPane.setBottomAnchor(node, 0.0);
+            AnchorPane.setRightAnchor(node, 0.0);
+
+            if (!isSearching) {
+                isSearching = true;
+                fileTreePane.getChildren().setAll(node);
+            }
+        });
+    }
+
+    private void showFileTreeView() {
+        Platform.runLater(() -> {
+            if (isSearching) {
+                isSearching = false;
+                fileTreePane.getChildren().setAll(fileTreeNode);
+            }
+        });
+    }
+
 }

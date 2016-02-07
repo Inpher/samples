@@ -29,7 +29,7 @@ import java.util.Optional;
  */
 public class DialogController {
 
-    static void showError(String title, String headerText, String contentText) {
+    public static void showError(String title, String headerText, String contentText) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(headerText);
@@ -38,19 +38,19 @@ public class DialogController {
         alert.showAndWait();
     }
 
-    static Optional<String> showTextUnputAndGetResult(String header, String content) {
+    public static Optional<String> showTextUnputAndGetResult(String header, String content) {
         TextInputDialog dialog = new TextInputDialog(content);
         dialog.setHeaderText(header);
         return dialog.showAndWait();
     }
 
-    static Optional<File> showFileChooserAndGetAbsPath() {
+    public static Optional<File> showFileChooserAndGetAbsPath() {
         FileChooser fileChooser = new FileChooser();
         File selected = fileChooser.showOpenDialog(new Stage());
         return Optional.ofNullable(selected);
     }
 
-    static Optional<File> showFileSaverAndGetAbsPath() {
+    public static Optional<File> showFileSaverAndGetAbsPath() {
         FileChooser fileChooser = new FileChooser();
         File saved = fileChooser.showSaveDialog(new Stage());
         return Optional.ofNullable(saved);

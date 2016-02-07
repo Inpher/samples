@@ -58,7 +58,14 @@ public class SearchManager {
         }
         if (!searchContent.equals("")) {
             doDelayedSearch(SEARCH_DELAY);
+        } else {
+            notifyStopSearch();
         }
+    }
+
+    private void notifyStopSearch() {
+        for(SearchResultObserver o: observers)
+            o.stopSearching();
     }
 
     private void doDelayedSearch(long delay) {

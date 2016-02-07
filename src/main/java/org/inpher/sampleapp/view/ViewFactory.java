@@ -17,13 +17,9 @@
 package org.inpher.sampleapp.view;
 
 import javafx.stage.Stage;
-import org.elasticsearch.client.Client;
-import org.inpher.clientapi.InpherClient;
 import org.inpher.clientapi.exceptions.InpherException;
 import org.inpher.sampleapp.model.ClientManager;
-import org.inpher.sampleapp.model.FileTreeManager;
 import org.inpher.sampleapp.model.SearchManager;
-import org.inpher.sampleapp.model.UserManager;
 
 /**
  * Created by sduc on 2/3/16.

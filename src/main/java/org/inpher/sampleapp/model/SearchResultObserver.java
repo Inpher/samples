@@ -24,5 +24,6 @@ import org.inpher.clientapi.DecryptedSearchResponse;
 public interface SearchResultObserver {
 
     void notify(DecryptedSearchResponse searchResult);
+    void stopSearching();
 
 }
