@@ -22,7 +22,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.inpher.sampleapp.model.ClientManager;
-import org.inpher.sampleapp.model.UserManager;
 import org.inpher.sampleapp.view.LoginView;
 
 import java.net.URL;
@@ -49,7 +48,6 @@ public class LoginController implements Initializable {
         String userStr = username.getText();
 
         if (clientManager.login(userStr, passStr)) {
-            System.out.println("LOGIN");
             view.gotoMainView();
         } else {
             DialogController.showError("Login Error",
@@ -62,10 +60,22 @@ public class LoginController implements Initializable {
         String passStr = password.getText();
         String userStr = username.getText();
 
+        // If the user doesn't confirm the password properly
+        if (!DialogController.confirmPassword(passStr)) {
+            DialogController.showError(
+                    "Register error",
+                    "Could not register",
+                    "Password confirmation mismatch!");
+            return;
+        }
+
         if (clientManager.register(userStr, passStr)) {
-            System.out.println("REGISTERED");
-            // TODO: maybe need to login here
-            view.gotoMainView();
+            if (clientManager.login(userStr, passStr))
+                view.gotoMainView();
+            else
+                DialogController.showError("Login Error",
+                        "Login Failed",
+                        "Unexpected error during login");
         } else {
             DialogController.showError("Register Error",
                     "Register Failed",
@@ -74,13 +84,14 @@ public class LoginController implements Initializable {
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {}
+    public void initialize(URL location, ResourceBundle resources) {
+    }
 
     /**
      * initClientManager sets the client manager of the controller.
      * Client manager handles all the calls to the Inpher backend.
      *
-     * @param cm
+     * @param cm Client manager to add
      */
     public void initClientManager(ClientManager cm) {
         clientManager = cm;

@@ -16,8 +16,11 @@
 
 package org.inpher.sampleapp.controller;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextInputDialog;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.Border;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -84,6 +87,22 @@ public class DialogController {
         FileChooser fileChooser = new FileChooser();
         File saved = fileChooser.showSaveDialog(new Stage());
         return Optional.ofNullable(saved);
+    }
+
+    public static boolean confirmPassword(String passwordToConfirm) {
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.setTitle("Confirm password");
+        dialog.setHeaderText("Re-enter your password");
+        ButtonType confirmButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
+        PasswordField passwordField = new PasswordField();
+        dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType);
+        dialog.getDialogPane().setContent(passwordField);
+        dialog.getDialogPane().setPadding(new Insets(15,15,15,15));
+        Platform.runLater(() -> passwordField.requestFocus());
+        dialog.setResultConverter(dialogButton -> {
+            return passwordToConfirm.equals(passwordField.getText());
+        });
+        return dialog.showAndWait().get();
     }
 
 }
