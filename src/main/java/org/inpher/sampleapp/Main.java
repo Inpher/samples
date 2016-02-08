@@ -24,7 +24,7 @@ import org.inpher.sampleapp.view.LoginView;
 import org.inpher.sampleapp.view.ViewFactory;
 
 /**
- * Created by Sebastien Duc on 2/2/16.
+ * This is the main class to start the application.
  */
 public class Main extends Application {
 

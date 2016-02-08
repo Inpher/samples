@@ -37,7 +37,11 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- *
+ * MainController is the main controller of the application. It controls the main window
+ * of the application. The main window consists of:
+ * - a search box to search in all the remote documents.
+ * - a file tree view to display the remote file system structure in a tree.
+ * - a file preview view to show a preview of a filesystem element.
  */
 public class MainController implements Initializable, SearchResultObserver {
 
@@ -71,6 +75,12 @@ public class MainController implements Initializable, SearchResultObserver {
         fileTreeNode = fileTreePane.getChildren().get(0);
     }
 
+    /**
+     * initClientManager sets the client manager to use in the controller.
+     * The client manager is the client that communicates with the remote server.
+     *
+     * @param clientManager
+     */
     public void initClientManager(ClientManager clientManager) {
         this.clientManager = clientManager;
 
@@ -82,6 +92,12 @@ public class MainController implements Initializable, SearchResultObserver {
         fileTreeController.update();
     }
 
+    /**
+     * initSearchManager sets the searchManager to use in the controller.
+     * The search manager is used to handle the search.
+     *
+     * @param searchManager
+     */
     public void initSearchManager(SearchManager searchManager) {
         this.searchManager = searchManager;
 
@@ -90,7 +106,7 @@ public class MainController implements Initializable, SearchResultObserver {
 
     public void onNewDirectoryAction(ActionEvent actionEvent) {
         String path = fileTreeController.getPathToClosestDirectoryToSelection();//getSelectedPath();
-        Optional<String> dirName = DialogController.showTextUnputAndGetResult(
+        Optional<String> dirName = DialogController.showTextInputAndGetResult(
                 "New Directory", "untitled directory");
         if (dirName.isPresent()) {
             clientManager.createDirectory(path, dirName.get());
@@ -102,7 +118,7 @@ public class MainController implements Initializable, SearchResultObserver {
         String path = fileTreeController.getPathToClosestDirectoryToSelection();//getSelectedPath();
         Optional<File> file = DialogController.showFileChooserAndGetAbsPath();
         if (file.isPresent()) {
-            Optional<String> name = DialogController.showTextUnputAndGetResult(
+            Optional<String> name = DialogController.showTextInputAndGetResult(
                     "File Name", file.get().getName());
             if (name.isPresent()) {
                 clientManager.uploadFile(file.get(), path, name.get());

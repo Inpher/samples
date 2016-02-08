@@ -27,7 +27,10 @@ import org.inpher.sampleapp.view.FileView;
 import java.io.IOException;
 
 /**
- * Created by sduc on 2/4/16.
+ * FilePreviewController controls the file preview view. The file preview only shows
+ * the metadata of the selected item in the file tree view. The controller handles
+ * the update when another file is selected in the tree view. It also handles the button
+ * to open the file. Open will show the file in the file viewer view.
  */
 public class FilePreviewController implements SelectedFileObserver {
 
@@ -65,6 +68,10 @@ public class FilePreviewController implements SelectedFileObserver {
         });
     }
 
+    /**
+     * setClientManager sets the client manager to use in the controller.
+     * @param clientManager
+     */
     public void setClientManager(ClientManager clientManager) {
         this.clientManager = clientManager;
     }

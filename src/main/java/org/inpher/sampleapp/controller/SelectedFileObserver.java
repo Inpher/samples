@@ -17,8 +17,16 @@
 package org.inpher.sampleapp.controller;
 
 /**
- * Created by sduc on 2/4/16.
+ * SelectedFileObserver is notified whenever a new element is selected in
+ * the file tree view controller by the FileTreeController.
  */
 public interface SelectedFileObserver {
+
+    /**
+     * update is called by the FileTreeController to update the observer that a new element
+     * is selected in the view.
+     *
+     * @param newSelectedFilePath path of the new selected element.
+     */
     void update(String newSelectedFilePath);
 }

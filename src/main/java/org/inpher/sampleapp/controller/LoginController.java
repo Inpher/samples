@@ -29,7 +29,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * Created by sduc on 2/2/16.
+ * LoginController is the controller for the login view.
+ * The login controller handles login and register buttons and the username/password fields.
  */
 public class LoginController implements Initializable {
 
@@ -42,14 +43,6 @@ public class LoginController implements Initializable {
     private ClientManager clientManager;
 
     private LoginView view;
-
-    /*
-    @FXML
-    private Button registerButton;
-
-    @FXML
-    private Button loginButton;
-    */
 
     public void handleLoginButton(ActionEvent actionEvent) {
         String passStr = password.getText();
@@ -83,6 +76,12 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {}
 
+    /**
+     * initClientManager sets the client manager of the controller.
+     * Client manager handles all the calls to the Inpher backend.
+     *
+     * @param cm
+     */
     public void initClientManager(ClientManager cm) {
         clientManager = cm;
     }

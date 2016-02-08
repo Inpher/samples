@@ -30,7 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * FileTreeController controls the file tree view. The file tree view consists of
+ * a tree representing the directory/file structure of the remote file system.
+ * The controller handles the selected item in the tree and updates the observers accordingly.
  */
 public class FileTreeController {
 
@@ -53,10 +55,22 @@ public class FileTreeController {
         this.clientManager = cli;
     }
 
+    /**
+     * getSelectedPath returns the path to the selected item in the tree from the root.
+     *
+     * @return the path to the selected item in the tree.
+     */
     public String getSelectedPath() {
         return selectedPath;
     }
 
+    /**
+     * getPathToClosestDirectoryToSelection returns the path to the parent directory
+     * of the selected item if it is not a directory and returns getSelectedPath() if
+     * it is a directory.
+     *
+     * @return the closest parent directory or itself if it is a directory.
+     */
     public String getPathToClosestDirectoryToSelection() {
         if (isDirectorySelected())
             return selectedPath;
@@ -84,7 +98,6 @@ public class FileTreeController {
                     if (newValue == null) return;
 
                     selectedPath = absolutePathTo(newValue);
-                    System.out.println(selectedPath);
                     notifyAllObserver(selectedPath);
                 });
     }
@@ -100,6 +113,10 @@ public class FileTreeController {
         }
     }
 
+    /**
+     * update updates the content of the file tree view. This has to be called whenever
+     * a new item is added in the tree.
+     */
     public void update() {
         ElementVisitor<TreeItem<String>> elementVisitor = new ElementVisitor<TreeItem<String>>() {
             @Override
@@ -129,6 +146,10 @@ public class FileTreeController {
         notifyAllObserver(selectedPath);
     }
 
+    /**
+     * addObserver adds a new observer which is notified whenever the selected file is changed.
+     * @param observer observer to add in the list of the controller's observer.
+     */
     public void addObserver(SelectedFileObserver observer) {
         observers.add(observer);
     }

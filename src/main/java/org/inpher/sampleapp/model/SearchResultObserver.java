@@ -19,11 +19,23 @@ package org.inpher.sampleapp.model;
 import org.inpher.clientapi.DecryptedSearchResponse;
 
 /**
- * Created by sduc on 2/5/16.
+ * SearchResultObserver is notified by a SearchManager with the search result when
+ * the search is completed.
  */
 public interface SearchResultObserver {
 
+    /**
+     * notify is called by the SearchManger to notify the observer of the search
+     * result.
+     *
+     * @param searchResult result of the search.
+     */
     void notify(DecryptedSearchResponse searchResult);
+
+    /**
+     * stopSearching is called by the SearchManager to notify the observer that the search
+     * has stopped.
+     */
     void stopSearching();
 
 }

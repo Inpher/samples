@@ -25,10 +25,17 @@ import java.io.File;
 import java.util.Optional;
 
 /**
- * Created by sduc on 2/3/16.
+ * Dialog controllers contains all the routines to open a dialog window.
  */
 public class DialogController {
 
+    /**
+     * showError opens an error dialog.
+     *
+     * @param title       title of the window.
+     * @param headerText  header text to show in the dialog.
+     * @param contentText content of the dialog.
+     */
     public static void showError(String title, String headerText, String contentText) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -38,18 +45,41 @@ public class DialogController {
         alert.showAndWait();
     }
 
-    public static Optional<String> showTextUnputAndGetResult(String header, String content) {
+    /**
+     * showTextInputAndGetResult asks the user for a text input in a dialog window and returns
+     * the input as an optional string.
+     *
+     * @param header  header to show in the dialog.
+     * @param content content to show in the dialog.
+     * @return an optional string. The option will contain the entered input if ok was pressed;
+     * the option will not have a value if cancel was pressed.
+     */
+    public static Optional<String> showTextInputAndGetResult(String header, String content) {
         TextInputDialog dialog = new TextInputDialog(content);
         dialog.setHeaderText(header);
         return dialog.showAndWait();
     }
 
+    /**
+     * showFileChooserAndGetAbsPath asks the user for a file to open in a dialog window and
+     * returns the chosen file as an option.
+     *
+     * @return an optional file. The option will contain the selected file if open was selected;
+     * the option will not have a value if cancel was pressed.
+     */
     public static Optional<File> showFileChooserAndGetAbsPath() {
         FileChooser fileChooser = new FileChooser();
         File selected = fileChooser.showOpenDialog(new Stage());
         return Optional.ofNullable(selected);
     }
 
+    /**
+     * showFileSaverAndGetAbsPath asks the user for a file to create in a dialog window and
+     * returns the chose file as an option.
+     *
+     * @return an optional file. The option will contain the selected file if save was selected;
+     * the option will not have a value otherwise.
+     */
     public static Optional<File> showFileSaverAndGetAbsPath() {
         FileChooser fileChooser = new FileChooser();
         File saved = fileChooser.showSaveDialog(new Stage());

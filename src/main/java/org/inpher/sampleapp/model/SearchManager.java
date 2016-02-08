@@ -21,7 +21,9 @@ import org.inpher.clientapi.DecryptedSearchResponse;
 import java.util.*;
 
 /**
- * Created by sduc on 2/5/16.
+ * SearchManager is a class to handle the search. It performs the search and notifies
+ * all its observers of the response. The search is delayed whenever the keywords are updated.
+ * The search is stopped if the keywords is an empty string.
  */
 public class SearchManager {
 
@@ -40,10 +42,23 @@ public class SearchManager {
         this.client = client;
     }
 
+    /**
+     * addSearchObserver adds a new observer to be notified on a search result.
+     *
+     * @param o search result observer to add to the list of observers of the SearchManager.
+     */
     public void addSearchObserver(SearchResultObserver o) {
         observers.add(o);
     }
 
+    /**
+     * setSearchContent sets the keywords to search. This will start a timer which once timeouts will
+     * notify the observers of the result. If a timer is already set it will cancel it and restart
+     * the timer. If the content is empty it will stop the running timer and notify the observers
+     * that the SearchManager has stopped its search.
+     *
+     * @param content keywords to search.
+     */
     public void setSearchContent(String content) {
         searchContent = content;
 

@@ -29,7 +29,9 @@ import java.nio.file.Files;
 import java.util.Optional;
 
 /**
- * Created by sduc on 2/4/16.
+ * FileViewerController controls the file viewer view. The file viewer view simply shows
+ * the content of a file. The controller also handles the button to download the file on
+ * the client.
  */
 public class FileViewerController {
 
@@ -42,6 +44,14 @@ public class FileViewerController {
     private File file;
     private Stage stage;
 
+    /**
+     * viewFile sets the content of the file viewer to the given file and shows it on the given
+     * stage.
+     *
+     * @param file file to show in the viewer.
+     * @param onStage stage to use to put the file viewer in.
+     * @throws IOException when there is an error reading the file.
+     */
     public void viewFile(File file, Stage onStage) throws IOException {
         this.file = file;
         this.stage = onStage;
