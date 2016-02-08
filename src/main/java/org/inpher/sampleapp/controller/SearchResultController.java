@@ -32,7 +32,8 @@ import org.inpher.clientapi.RankedSearchResult;
 import java.util.List;
 
 /**
- *
+ * SearchResultController is the controller for the search result.
+ * The search result is shown as a table view.
  */
 public class SearchResultController {
 
@@ -46,8 +47,14 @@ public class SearchResultController {
 
     public void initialize() {
         searchResultTableView.setItems(tableEntries);
+        setupColumns();
+        setupSelectionListener();
+    }
+
+    private void setupColumns() {
         fileColumn.setCellValueFactory(
-                new PropertyValueFactory<RankedSearchResultTableItem,String>("fileName"));
+                new PropertyValueFactory<>(RankedSearchResultTableItem.FILE_NAME_PROP));
+
         /*
         TableColumn<RankedSearchResultTableItem, Double> scores = new TableColumn<>("Score");
         scores.setCellValueFactory(new PropertyValueFactory<>("score"));
@@ -55,10 +62,24 @@ public class SearchResultController {
         */
     }
 
+    private void setupSelectionListener() {
+        searchResultTableView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    System.out.println("selected " + newValue.getFileName());
+                    // TODO change file preview for the search in file.
+                });
+    }
+
     public TableView getSearchResultTableView() {
         return searchResultTableView;
     }
 
+    /**
+     * updateSearchResult updates the content of the search result view with the
+     * provided new search result.
+     *
+     * @param resultList new search result as a list of RankedSearchResult
+     */
     public void updateSearchResult(List<RankedSearchResult> resultList) {
         List<RankedSearchResultTableItem> l = Lists.transform(
                 resultList,
@@ -66,7 +87,14 @@ public class SearchResultController {
         tableEntries.setAll(l);
     }
 
+    /**
+     * RankedSearchResultTableItem is a class that wraps RankedSearchResult such that it
+     * can be used to show it in a TableView
+     */
     public class RankedSearchResultTableItem {
+
+        public static final String FILE_NAME_PROP = "fileName";
+        public static final String SCORE_PROP = "score";
 
         private DoubleProperty score;
         private StringProperty fileName;
@@ -86,7 +114,7 @@ public class SearchResultController {
 
         public StringProperty fileNameProperty() {
             if (fileName == null)
-                fileName = new SimpleStringProperty(this, "fileName");
+                fileName = new SimpleStringProperty(this, FILE_NAME_PROP);
             return fileName;
         }
 
@@ -100,7 +128,7 @@ public class SearchResultController {
 
         public DoubleProperty scoreProperty() {
             if (score == null)
-                score = new SimpleDoubleProperty(this, "score");
+                score = new SimpleDoubleProperty(this, SCORE_PROP);
             return score;
         }
 

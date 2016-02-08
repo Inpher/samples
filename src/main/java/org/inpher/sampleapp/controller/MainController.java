@@ -89,17 +89,17 @@ public class MainController implements Initializable, SearchResultObserver {
     }
 
     public void onNewDirectoryAction(ActionEvent actionEvent) {
-        String path = fileTreeController.getSelectedPath();
+        String path = fileTreeController.getPathToClosestDirectoryToSelection();//getSelectedPath();
         Optional<String> dirName = DialogController.showTextUnputAndGetResult(
                 "New Directory", "untitled directory");
         if (dirName.isPresent()) {
-            clientManager.createDirectory(path + dirName.get());
+            clientManager.createDirectory(path, dirName.get());
             fileTreeController.update();
         }
     }
 
     public void onNewFileUploadAction(ActionEvent actionEvent) {
-        String path = fileTreeController.getSelectedPath();
+        String path = fileTreeController.getPathToClosestDirectoryToSelection();//getSelectedPath();
         Optional<File> file = DialogController.showFileChooserAndGetAbsPath();
         if (file.isPresent()) {
             Optional<String> name = DialogController.showTextUnputAndGetResult(

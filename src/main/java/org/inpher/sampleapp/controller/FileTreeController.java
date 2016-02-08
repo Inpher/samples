@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sduc on 2/4/16.
+ *
  */
 public class FileTreeController {
 
@@ -57,6 +57,17 @@ public class FileTreeController {
         return selectedPath;
     }
 
+    public String getPathToClosestDirectoryToSelection() {
+        if (isDirectorySelected())
+            return selectedPath;
+        else
+            return selectedPath.substring(0, selectedPath.lastIndexOf('/'));
+    }
+
+    private boolean isDirectorySelected() {
+        return clientManager.isDirectory(selectedPath);
+    }
+
     private static String absolutePathTo(TreeItem<String> node) {
         String path = "";
         for (TreeItem<String> it = node;
@@ -73,6 +84,7 @@ public class FileTreeController {
                     if (newValue == null) return;
 
                     selectedPath = absolutePathTo(newValue);
+                    System.out.println(selectedPath);
                     notifyAllObserver(selectedPath);
                 });
     }

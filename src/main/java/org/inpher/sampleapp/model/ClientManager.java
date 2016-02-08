@@ -92,8 +92,9 @@ public class ClientManager {
         return true;
     }
 
-    public void createDirectory(String path) {
-        FrontendPath newDir = FrontendPath.parse(path);
+    public void createDirectory(String location, String dirName) {
+        FrontendPath newDir = FrontendPath.parse(location);
+        newDir = newDir.resolve(dirName);
         System.out.println("New Dir:" + newDir);
         inpherClient.makeDirectory(new MakeDirectoryRequest(newDir));
     }
@@ -130,5 +131,10 @@ public class ClientManager {
 
     public DecryptedSearchResponse search(List<String> keywords) {
         return inpherClient.search(keywords);
+    }
+
+    public boolean isDirectory(String selectedPath) {
+        Element el = inpherClient.listElement(new ListElementRequest(selectedPath));
+        return el.getType() == ElementType.DIRECTORY;
     }
 }

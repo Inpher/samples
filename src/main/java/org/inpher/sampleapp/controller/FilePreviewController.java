@@ -79,7 +79,6 @@ public class FilePreviewController implements SelectedFileObserver {
 
     @Override
     public void update(String newSelectedFilePath) {
-        System.out.println("path " + newSelectedFilePath);
         Element document = clientManager.getElement(newSelectedFilePath);
 
         documentName.setText(document.getElementName());
