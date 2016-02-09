@@ -89,6 +89,9 @@ public class MainController implements Initializable, SearchResultObserver {
 
         this.fileTreeController.addObserver(filePreviewController);
 
+        // TODO: change this to avoid the dot dot
+        this.srv.getController().addSelectedFileObserver(filePreviewController);
+
         fileTreeController.update();
     }
 

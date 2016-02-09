@@ -29,6 +29,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.inpher.clientapi.RankedSearchResult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,10 +46,16 @@ public class SearchResultController {
 
     private ObservableList<RankedSearchResultTableItem> tableEntries = FXCollections.observableArrayList();
 
+    private List<SelectedFileObserver> observers = new ArrayList<>();
+
     public void initialize() {
         searchResultTableView.setItems(tableEntries);
         setupColumns();
         setupSelectionListener();
+    }
+
+    public void addSelectedFileObserver(SelectedFileObserver o) {
+        observers.add(o);
     }
 
     private void setupColumns() {
@@ -65,9 +72,11 @@ public class SearchResultController {
     private void setupSelectionListener() {
         searchResultTableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    System.out.println("selected " +
-                            ((newValue != null) ? newValue.getFileName() : "null"));
-                    // TODO change file preview for the search in file.
+                    if (newValue != null) {
+                        for (SelectedFileObserver o : observers) {
+                            o.update(newValue.getFileName());
+                        }
+                    }
                 });
     }
 
