@@ -65,7 +65,8 @@ public class SearchResultController {
     private void setupSelectionListener() {
         searchResultTableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    System.out.println("selected " + newValue.getFileName());
+                    System.out.println("selected " +
+                            ((newValue != null) ? newValue.getFileName() : "null"));
                     // TODO change file preview for the search in file.
                 });
     }
