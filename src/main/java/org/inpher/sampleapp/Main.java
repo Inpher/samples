@@ -18,8 +18,6 @@ package org.inpher.sampleapp;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.inpher.clientapi.InpherClient;
-import org.inpher.sampleapp.model.UserManager;
 import org.inpher.sampleapp.view.LoginView;
 import org.inpher.sampleapp.view.ViewFactory;
 
