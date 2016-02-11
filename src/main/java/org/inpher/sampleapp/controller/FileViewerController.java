@@ -48,7 +48,7 @@ public class FileViewerController {
      * viewFile sets the content of the file viewer to the given file and shows it on the given
      * stage.
      *
-     * @param file file to show in the viewer.
+     * @param file    file to show in the viewer.
      * @param onStage stage to use to put the file viewer in.
      * @throws IOException when there is an error reading the file.
      */

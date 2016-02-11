@@ -76,7 +76,7 @@ public class FileTreeController {
         if (isDirectorySelected())
             return selectedPath;
         else if (isRootSelected())
-           return selectedPath;
+            return selectedPath;
         else
             return selectedPath.substring(0, selectedPath.lastIndexOf('/'));
     }

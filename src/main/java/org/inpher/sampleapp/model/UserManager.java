@@ -23,7 +23,7 @@ import org.inpher.clientapi.exceptions.InvalidCredentialsException;
 import org.inpher.clientapi.exceptions.NonRegisteredUserException;
 
 /**
- * Created by sduc on 2/2/16.
+ * TODO: delete me.
  */
 public class UserManager {
 

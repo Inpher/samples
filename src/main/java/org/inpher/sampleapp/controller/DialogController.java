@@ -18,9 +18,7 @@ package org.inpher.sampleapp.controller;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.Border;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -97,7 +95,7 @@ public class DialogController {
         PasswordField passwordField = new PasswordField();
         dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType);
         dialog.getDialogPane().setContent(passwordField);
-        dialog.getDialogPane().setPadding(new Insets(15,15,15,15));
+        dialog.getDialogPane().setPadding(new Insets(15, 15, 15, 15));
         Platform.runLater(() -> passwordField.requestFocus());
         dialog.setResultConverter(dialogButton -> {
             return passwordToConfirm.equals(passwordField.getText());

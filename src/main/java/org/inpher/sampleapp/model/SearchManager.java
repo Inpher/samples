@@ -79,7 +79,7 @@ public class SearchManager {
     }
 
     private void notifyStopSearch() {
-        for(SearchResultObserver o: observers)
+        for (SearchResultObserver o : observers)
             o.stopSearching();
     }
 

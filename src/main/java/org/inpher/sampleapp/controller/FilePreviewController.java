@@ -70,6 +70,7 @@ public class FilePreviewController implements SelectedFileObserver {
 
     /**
      * setClientManager sets the client manager to use in the controller.
+     *
      * @param clientManager
      */
     public void setClientManager(ClientManager clientManager) {

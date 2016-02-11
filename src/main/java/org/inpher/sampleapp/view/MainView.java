@@ -26,7 +26,12 @@ import org.inpher.sampleapp.model.SearchManager;
 import java.io.IOException;
 
 /**
- * Created by sduc on 2/3/16.
+ * MainView is the view showing the main window. The main window consists of a
+ * search box, a file tree view and a file preview view.
+ * - The search box is used to search keywords in all documents.
+ * - The file tree view shows a view of the remote file system tree.
+ * - The file preview view shows the meta data of the selected file in the file
+ * tree view.
  */
 public class MainView {
 

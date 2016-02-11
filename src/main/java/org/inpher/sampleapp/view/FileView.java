@@ -25,7 +25,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by sduc on 2/5/16.
+ * FileView shows the content of a file in a window.
  */
 public class FileView {
 

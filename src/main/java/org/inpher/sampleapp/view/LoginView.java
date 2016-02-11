@@ -22,12 +22,11 @@ import javafx.stage.Stage;
 import org.inpher.clientapi.exceptions.InpherException;
 import org.inpher.sampleapp.controller.LoginController;
 import org.inpher.sampleapp.model.ClientManager;
-import org.inpher.sampleapp.model.UserManager;
 
 import java.io.IOException;
 
 /**
- * Created by sduc on 2/3/16.
+ * LoginView is the view to show the login/register screen.
  */
 public class LoginView {
 
@@ -66,7 +65,8 @@ public class LoginView {
         try {
             main = factory.getMainView();
             main.show();
-        } catch (InpherException e) {}
+        } catch (InpherException e) {
+        }
     }
 
 }

@@ -16,10 +16,8 @@
 
 package org.inpher.sampleapp.model;
 
-import javafx.scene.Node;
-
 /**
- * Created by sduc on 2/3/16.
+ * TODO: delete me
  */
 public class FileTreeManager {
 

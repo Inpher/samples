@@ -22,12 +22,9 @@ import org.inpher.sampleapp.model.ClientManager;
 import org.inpher.sampleapp.model.SearchManager;
 
 /**
- * Created by sduc on 2/3/16.
+ * ViewFactory is used to create the views.
  */
 public class ViewFactory {
-
-    private static MainView mainViewInstance;
-    private static LoginView loginViewInstance;
 
     private final Stage stage;
 

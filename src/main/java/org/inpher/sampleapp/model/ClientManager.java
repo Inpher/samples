@@ -24,7 +24,6 @@ import org.inpher.clientapi.exceptions.NonRegisteredUserException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -53,7 +52,8 @@ public class ClientManager {
                     if (instance == null)
                         instance = new ClientManager(InpherClient.getClient());
                 }
-            } catch (InpherException e) {}
+            } catch (InpherException e) {
+            }
         }
         return instance;
     }
@@ -117,7 +117,7 @@ public class ClientManager {
      * CreateDirectory creates a new directory dirName on the server at the given location.
      *
      * @param location Location in the remote file system where the directory needs to be created.
-     * @param dirName Name of the directory to create.
+     * @param dirName  Name of the directory to create.
      */
     public void createDirectory(String location, String dirName) {
         FrontendPath newDir = FrontendPath.parse(location);
@@ -130,7 +130,7 @@ public class ClientManager {
      * visitFileTree visits the remote file system using the given visitor callback.
      *
      * @param elementVisitor Visitor callback to use when visiting the remote file system.
-     * @param <T> Type of the item tree on the client side.
+     * @param <T>            Type of the item tree on the client side.
      * @return The root of the generated tree resulting from visiting the file system.
      */
     public <T> TreeItem<T> visitFileTree(ElementVisitor<TreeItem<T>> elementVisitor) {
@@ -153,8 +153,8 @@ public class ClientManager {
     /**
      * uploadFile uploads a new file on the remote file system.
      *
-     * @param file File to upload.
-     * @param path remote path where the file will be stored.
+     * @param file       File to upload.
+     * @param path       remote path where the file will be stored.
      * @param uploadName name of the uploaded file on the remote file system.
      */
     public void uploadFile(File file, String path, String uploadName) {
@@ -183,7 +183,7 @@ public class ClientManager {
      */
     public File openFile(String selectedPath) throws IOException {
         FrontendPath fPath = FrontendPath.parse(selectedPath);
-        File tmp = File.createTempFile(selectedPath.replace('/','_'), ".tmp");
+        File tmp = File.createTempFile(selectedPath.replace('/', '_'), ".tmp");
         inpherClient.readDocument(new ReadDocumentRequest(fPath, tmp));
         return tmp;
     }
