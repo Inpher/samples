@@ -12,6 +12,16 @@ function cleanup()
     fi
 }
 
+function rminsolr()
+{
+    RM_INSOLR="docker rm insolr"
+    if [ "$(uname)" == "Darwin" ]; then
+        docker-machine ssh $(docker-machine ls -q) -C $RM_INSOLR
+    else
+        $(echo $RM_INSOLR)
+    fi
+}
+
 function startSolr()
 {
     DOCKER_SOLR="docker run -td --name $SOLR_NAME -p 8983:8983 inpher/solr-frequency"
@@ -37,9 +47,6 @@ searchServerType=REMOTE_SOLR
 solrURL=http://localhost:8983/solr/inpher-frequency
 EOM
 
-echo "[COMPILING WITH GRADLE]"
-./gradlew installApp
-
 PS="docker ps -fq name=$SOLR_NAME"
 if [ "$(uname)" == "Darwin" ]; then
     IS="$(docker-machine ssh $(docker-machine ls -q) -C $PS)"
@@ -47,6 +54,7 @@ else
     IS="$(echo $PS)"
 fi
 if [ "$IS" == "" ]; then
+    rminsolr
     startSolr
 
     until [ "$(curl -s http://localhost:8983/solr/)" != "" &>/dev/null ]; do :; done
