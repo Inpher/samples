@@ -17,6 +17,8 @@
 package org.inpher.sampleapp.model;
 
 import javafx.scene.control.TreeItem;
+import org.apache.tika.mime.MimeTypeException;
+import org.apache.tika.mime.MimeTypes;
 import org.inpher.clientapi.*;
 import org.inpher.clientapi.exceptions.InpherException;
 import org.inpher.clientapi.exceptions.InvalidCredentialsException;
@@ -183,9 +185,19 @@ public class ClientManager {
      */
     public File openFile(String selectedPath) throws IOException {
         FrontendPath fPath = FrontendPath.parse(selectedPath);
-        File tmp = File.createTempFile(selectedPath.replace('/', '_'), ".tmp");
+        String fileExt = getDefaultFileExt(selectedPath);
+        File tmp = File.createTempFile(selectedPath.replace('/', '_'), fileExt);
         inpherClient.readDocument(new ReadDocumentRequest(fPath, tmp));
         return tmp;
+    }
+
+    private String getDefaultFileExt(String selectedPath) {
+        String mimeType = getElement(selectedPath).getContentType();
+        try {
+            return MimeTypes.getDefaultMimeTypes().forName(mimeType).getExtension();
+        } catch (MimeTypeException e) {
+            return ".tmp";
+        }
     }
 
     /**

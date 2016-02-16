@@ -32,6 +32,9 @@ import java.util.Optional;
  * FileViewerController controls the file viewer view. The file viewer view simply shows
  * the content of a file. The controller also handles the button to download the file on
  * the client.
+ *
+ * @Deprecated this class was replaced by the Desktop.getDesktop().open() which
+ * uses the default OS file opener.
  */
 public class FileViewerController {
 

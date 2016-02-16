@@ -22,8 +22,8 @@ import javafx.scene.control.Label;
 import org.inpher.clientapi.Element;
 import org.inpher.clientapi.ElementType;
 import org.inpher.sampleapp.model.ClientManager;
-import org.inpher.sampleapp.view.FileView;
 
+import java.awt.*;
 import java.io.IOException;
 
 /**
@@ -60,10 +60,9 @@ public class FilePreviewController implements SelectedFileObserver {
     public void initialize() {
         openButton.setOnAction(event -> {
             try {
-                FileView fw = new FileView(clientManager.openFile(getSelectedPath()));
-                fw.show();
+                Desktop.getDesktop().open(clientManager.openFile(getSelectedPath()));
             } catch (IOException e) {
-                DialogController.showError("Document open error", "IO error", "Could not create tmp file");
+                DialogController.showError("Document open error", "IO error", e.getMessage());
             }
         });
     }

@@ -26,6 +26,9 @@ import java.io.IOException;
 
 /**
  * FileView shows the content of a file in a window.
+ *
+ * @Deprecated this class was replaced by the Desktop.getDesktop().open() which
+ * uses the default OS file opener.
  */
 public class FileView {
 
