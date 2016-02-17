@@ -37,8 +37,8 @@ public class DemoSearch {
 		inpherClient.loginUser(user);
 
 		List<String> kwds = Arrays.asList(keywords);
-		// call the search method 
-		DecryptedSearchResponse res = inpherClient.search(kwds);
+		// call the search method: return the first 100 results
+		DecryptedSearchResponse res = inpherClient.search(kwds,0,100);
 		// display the search results 
 		for (RankedSearchResult e : res.getDocumentIds()) {
 			System.out.format("%6.4f\t%s\n", e.getScore(), e.getDocId());
