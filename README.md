@@ -31,7 +31,7 @@ To start the GUI and all the backends:
 
 The `run` script starts sets the backend in docker containers to easily use the
 client. For the client to work, there needs to be a search backend and a storage
-backend.
+backend. Both backend are started by the script in docker containers.
 
 ### Search Backend
 
@@ -45,14 +45,13 @@ Supported search backends:
 
 ### Storage Backend
 
-The storage backed used currently is a local folder created in the project root.
+The storage backend used currently is HDFS. The script will start it in a docker
+container and set the proper user permissions.
 
 Supported storage backeds:
 - **Amazon S3**: https://aws.amazon.com/s3/
 - **Local Storage**: this is just a local folder mounted on the client file
   system.
-
-Coming soon:
 - **HDFS**: https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html
 
 ### The Client
