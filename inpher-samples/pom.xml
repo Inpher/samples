@@ -14,7 +14,7 @@
 	<repository>
 	    <id>org.inpher</id>
 	    <name>Inpher Repository</name>
-	    <url>http://inpher.io/maven</url>
+	    <url>http://dp.inpher.io/maven</url>
 	</repository>
 	<repository>
          <id>elasticsearch-releases</id>
