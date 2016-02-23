@@ -11,7 +11,7 @@ repositories {
     mavenCentral()
     jcenter()
     maven {
-        url "http://inpher.io/maven"
+        url "http://dp.inpher.io/maven"
     }
 }
 
