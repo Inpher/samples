@@ -41,8 +41,8 @@ public class Samples {
             // create the object
 
             System.out.println("Creating the InpherClient object");
-            InpherClient client = InpherClient
-                    .getClient(Samples.class.getResource("config.properties").getPath());
+            InpherClient client = InpherClient.getClient();
+
             System.out.println("Object InpherClient is ready.");
             System.out.println();
 
