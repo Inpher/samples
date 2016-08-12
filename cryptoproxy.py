@@ -7,6 +7,7 @@ import sys
 import hmac
 import hashlib
 import base64
+import json
 from Crypto.Cipher import AES
 from Crypto import Random
 
@@ -19,6 +20,24 @@ def generate_trapdoor(data):
     trapdoor_generator = hmac.new(search_secret_key, data, hashlib.sha256)
     # Returning as b64 instead of hex`
     return base64.b64encode(trapdoor_generator.digest()).decode()
+
+# Trapyfy all json fields execpt id which needs to be encrypted
+def encrypt_json(json_str):
+    data = json.loads(json_str)
+    for key in data:
+        if key == 'id':
+            data[key] = encrypt_path(data[key])
+        else:
+            data[key] =  " ".join(map(lambda word: generate_trapdoor(word), data[key].split()))
+    return json.dumps(data)
+
+# Decrypt the ID field
+def decrypt_json(json_str):
+    data = json.loads(json_str)
+    for key in data:
+        if key == 'id':
+            data[key] = decrypt_path(data[key])
+    return json.dumps(data)
 
 # AES CBC Blocksize and padding
 BS = 16
@@ -118,12 +137,13 @@ class TheServer:
         # Proxy -> Solr
         if self.channel[self.s].getpeername()[1] == 8983:
             #out_data = generate_trapdoor(out_data)
-            out_data = encrypt_path(out_data)
+            #out_data = encrypt_path(out_data)
+            out_data = encrypt_json(out_data)
             print "Sending data do Solr:\n" + out_data
 
         # Proxy -> Client
         else:
-            out_data = decrypt_path(out_data)
+            out_data = decrypt_json(out_data)
             print "Sending data do Client:\n" + out_data
 
         # Forward packet
