@@ -6,15 +6,36 @@ import time
 import sys
 import hmac
 import hashlib
-import binascii
+import base64
+from Crypto.Cipher import AES
+from Crypto import Random
 
-# HMAC stuff
-secret_key = 'secret-shared-key-goes-here'
+# Crypto stuff
+search_secret_key = 'search-secret-shared-key-goes-here'
+path_secret_key = hashlib.md5('path-secret-shared-key-goes-here').digest()
 
+# Generate trapdoors for the index
 def generate_trapdoor(data):
-    trapdoor_generator = hmac.new(secret_key, data, hashlib.sha256)
-    # Returning as b64 instead of hex
-    return binascii.b2a_base64(trapdoor_generator.hexdigest().decode("hex"))
+    trapdoor_generator = hmac.new(search_secret_key, data, hashlib.sha256)
+    # Returning as b64 instead of hex`
+    return base64.b64encode(trapdoor_generator.digest()).decode()
+
+# AES CBC Blocksize and padding
+BS = 16
+pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS)
+unpad = lambda s : s[:-ord(s[len(s)-1:])]
+
+def encrypt_path(path):
+    raw = pad(path)
+    iv = Random.new().read(AES.block_size)
+    cipher = AES.new(path_secret_key, AES.MODE_CBC, iv)
+    return base64.b64encode(iv + cipher.encrypt(raw))
+
+def decrypt_path(encPath):
+    enc = base64.b64decode(encPath)
+    iv = enc[:16]
+    cipher = AES.new(path_secret_key, AES.MODE_CBC, iv)
+    return unpad(cipher.decrypt(enc[16:]))
 
 # Changing the buffer_size and delay, you can improve the speed and bandwidth.
 # But when buffer get to high or delay go too down, you can brake things
@@ -91,12 +112,22 @@ class TheServer:
         del self.channel[self.s]
 
     def on_recv(self):
-        data = self.data
         # here we can parse and/or modify the data before send forward
-        print "Plain:" + data
-        print "HMAC:" + generate_trapdoor(data)
+        out_data = self.data
 
-        self.channel[self.s].send(data)
+        # Proxy -> Solr
+        if self.channel[self.s].getpeername()[1] == 8983:
+            #out_data = generate_trapdoor(out_data)
+            out_data = encrypt_path(out_data)
+            print "Sending data do Solr:\n" + out_data
+
+        # Proxy -> Client
+        else:
+            out_data = decrypt_path(out_data)
+            print "Sending data do Client:\n" + out_data
+
+        # Forward packet
+        self.channel[self.s].send(out_data)
 
 if __name__ == '__main__':
         # Here we define the listen-port
