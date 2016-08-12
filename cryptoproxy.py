@@ -4,6 +4,17 @@ import socket
 import select
 import time
 import sys
+import hmac
+import hashlib
+import binascii
+
+# HMAC stuff
+secret_key = 'secret-shared-key-goes-here'
+
+def generate_trapdoor(data):
+    trapdoor_generator = hmac.new(secret_key, data, hashlib.sha256)
+    # Returning as b64 instead of hex
+    return binascii.b2a_base64(trapdoor_generator.hexdigest().decode("hex"))
 
 # Changing the buffer_size and delay, you can improve the speed and bandwidth.
 # But when buffer get to high or delay go too down, you can brake things
@@ -82,7 +93,9 @@ class TheServer:
     def on_recv(self):
         data = self.data
         # here we can parse and/or modify the data before send forward
-        print data
+        print "Plain:" + data
+        print "HMAC:" + generate_trapdoor(data)
+
         self.channel[self.s].send(data)
 
 if __name__ == '__main__':
