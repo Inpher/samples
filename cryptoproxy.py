@@ -10,6 +10,10 @@ import base64
 import json
 from Crypto.Cipher import AES
 from Crypto import Random
+from BaseHTTPServer import BaseHTTPRequestHandler
+from StringIO import StringIO
+import urllib
+import urlparse
 
 # Crypto stuff
 search_secret_key = 'search-secret-shared-key-goes-here'
@@ -60,7 +64,19 @@ def decrypt_path(encPath):
 # But when buffer get to high or delay go too down, you can brake things
 buffer_size = 4096
 delay = 0.0001
-forward_to = ('localhost', 8983)
+#forward_to = ('localhost', 8983)
+forward_to = ('localhost', 8984)
+
+class HTTPRequest(BaseHTTPRequestHandler):
+    def __init__(self, request_text):
+        self.rfile = StringIO(request_text)
+        self.raw_requestline = self.rfile.readline()
+        self.error_code = self.error_message = None
+        self.parse_request()
+
+    def send_error(self, code, message):
+        self.error_code = code
+        self.error_message = message
 
 class Forward:
     def __init__(self):
@@ -135,11 +151,13 @@ class TheServer:
         out_data = self.data
 
         # Proxy -> Solr
-        if self.channel[self.s].getpeername()[1] == 8983:
+        if self.channel[self.s].getpeername()[1] == 8984:
             #out_data = generate_trapdoor(out_data)
             #out_data = encrypt_path(out_data)
-            out_data = encrypt_json(out_data)
-            print "Sending data do Solr:\n" + out_data
+            #out_data = encrypt_json(out_data)
+            request = HTTPRequest(out_data)
+            print "HTTP: " + urlparse.parse_qs(urlparse.urlparse(urllib.unquote(request.path))[4])['q']
+            #print "Sending data do Solr:\n" + out_data
 
         # Proxy -> Client
         else:
@@ -151,8 +169,8 @@ class TheServer:
 
 if __name__ == '__main__':
         # Here we define the listen-port
-        server = TheServer('', 9090)
-        #server = TheServer('', 8983)
+        #server = TheServer('', 9090)
+        server = TheServer('', 8983)
         try:
             server.main_loop()
         except KeyboardInterrupt:
