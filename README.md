@@ -1,38 +1,24 @@
 # crypto-proxy
 
-### How to test 
-(keep a terminal open for each of the commands):
-
-#### Simulate Solr: 
-Create a listener on port 8983 (Solr)
-```
-nc -l 8983
-```
-
-#### Run the proxy:
-```
-./cryptoproxy.py
-```
-
-#### Connect to the proxy:
-```
-telnet localhost 9090
-```
-then send a JSON
+## crypoproxy-index.py
 
 ```
-{"keywords": "bla bli blu", "id": "moep"}
+python cryptoproxy-index.py
 ```
 
-you will see the following on the server
+Starts a server listening on port *8984*
 
 ```
-{"keywords": "IBnvMiCEBNVS2KeMvc5T93ZQV2VSvxh4eTuUK08ObXE= CjWPguwg/lKDmiSVbg7sBhRYEMSMHoVudDOi1qLQKBY= 61kdTgPSfCk/4uYG66ZOu6kx1wDVdSvgcC9UWMnfHfU=", "id": "Vp/4/VvUpJMaKTGLkSMiqe80rWgykhXXPmBwNJZYv0g="}
+# Send the customers.xml file to the server for indexing using netcat
+nc -w 3 localhost 8984 < customer.xml
 ```
 
-in the server terminal, enter the encrypted JSON from above
+The server will then encrypt and forward the sample document customer.xml to Solr running on *marvel.inpher.io*
+
 
 ```
-{"keywords": "IBnvMiCEBNVS2KeMvc5T93ZQV2VSvxh4eTuUK08ObXE= CjWPguwg/lKDmiSVbg7sBhRYEMSMHoVudDOi1qLQKBY= 61kdTgPSfCk/4uYG66ZOu6kx1wDVdSvgcC9UWMnfHfU=", "id": "moep"}
+Ctrl+C to terminate server
 ```
 
+## crypoproxy-search.py
+not yet implemented
