@@ -22,3 +22,8 @@ Ctrl+C to terminate server
 
 ## crypoproxy-search.py
 not yet implemented
+
+
+### References
+https://cwiki.apache.org/confluence/display/solr/Uploading+Data+with+Index+Handlers
+https://docs.python.org/2/library/xml.etree.elementtree.html
