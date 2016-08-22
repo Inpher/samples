@@ -44,7 +44,7 @@ def generate_trapdoor(data):
     # Returning as b64 instead of hex`
     return base64.b64encode(trapdoor_generator.digest()).decode()
 
-def encrypt_ID(path):
+def encrypt(path):
     raw = pad(path)
     iv = Random.new().read(AES.block_size)
     cipher = AES.new(path_secret_key, AES.MODE_CBC, iv)
@@ -77,12 +77,90 @@ def preprocess_XML(data):
             elem.text = elem.text.strip()
 
             if elem.tag == 'id':
-                field.text = encrypt_ID(elem.text)
+                field.text = encrypt(elem.text)
             else:
                 field.text = generate_trapdoor(elem.text)
 
             # Append field to solr_doc
             doc_root.insert(0,field)
+
+    return ET.tostring(solr_root)
+
+
+def light_Solr_doc(data):
+    # Creating blank Solr XML
+    solr_root = ET.Element('add')
+    solr_root.attrib = {'commitWithin' : '1000', 'overwrite' : 'true'}
+    doc_root = ET.SubElement(solr_root,'doc')
+
+    # Reading data from Temenos (XML)
+    sio = StringIO.StringIO(data)
+
+    # Skip first garbled bytes (no clue why this is needed for java...)
+    if data[0] != '<':
+        sio.read(2)
+
+    # Read the rest
+    out_data = sio.read()
+    # Construct XML tree
+    root = ET.fromstring(out_data);
+
+    ### ID
+    tag = 'id'
+    field_e = ET.Element('field')
+    field_e.attrib = { 'name' : tag}
+
+    #field_e.text =  encrypt(root.find(tag).text.strip())
+    field_e.text =  root.find(tag).text.strip()
+    doc_root.insert(0,field_e)
+
+    field_t = ET.Element('field')
+    field_t.attrib = { 'name' : tag+'enc'}
+    field_t.text =  generate_trapdoor(root.find(tag).text.strip())
+    doc_root.insert(0,field_t)
+
+    ### Mnemonic
+    tag = 'mnemonic'
+    field_e = ET.Element('field')
+    field_e.attrib = { 'name' : tag}
+    #field_e.text =  encrypt(root.find(tag).text.strip())
+    field_e.text =  root.find(tag).text.strip()
+    doc_root.insert(0,field_e)
+
+    field_t = ET.Element('field')
+    field_t.attrib = { 'name' : tag+'enc'}
+    field_t.text =  generate_trapdoor(root.find(tag).text.strip())
+    doc_root.insert(0,field_t)
+
+    ### Name
+    tag = 'name'
+    field_e = ET.Element('field')
+    field_e.attrib = { 'name' : tag}
+    #field_e.text =  encrypt(root.find('familyName').text.strip())
+    field_e.text =  root.find('familyName').text.strip()
+    doc_root.insert(0,field_e)
+
+    field_t = ET.Element('field')
+    field_t.attrib = { 'name' : tag+'enc'}
+    field_t.text =  generate_trapdoor(root.find('familyName').text.strip())
+    doc_root.insert(0,field_t)
+
+    ### Address
+    tag = 'address'
+    field_e = ET.Element('field')
+    field_e.attrib = { 'name' : tag}
+    values = root.find('nameAddress').text.strip()
+    #field_e.text =  encrypt(values)
+    field_e.text =  values
+    doc_root.insert(0,field_e)
+
+    i = 0
+    for value in values.split():
+        field_t = ET.Element('field')
+        field_t.attrib = { 'name' : tag+'enc'+str(i)}
+        field_t.text =  generate_trapdoor(value)
+        doc_root.insert(0,field_t)
+        i += 1
 
     return ET.tostring(solr_root)
 
@@ -139,7 +217,8 @@ class TheServer:
 
     def on_recv(self):
         # Proxy -> Solr
-        out_data = preprocess_XML(self.data)
+        #out_data = preprocess_XML(self.data)
+        out_data = light_Solr_doc(self.data)
         commit_solr(out_data)
         print 'Data sent to Solr'
 
