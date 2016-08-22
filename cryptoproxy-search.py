@@ -72,6 +72,7 @@ def modify_query(query_str):
 
     ## Reconstruct
     query['q'][0] = mod_query_qparam.encode('utf-8')
+    query['fl'] = 'id,mnemonic,name,address'.encode('utf-8')
     lst = list(url)
     lst[3] = urllib.urlencode(query,doseq=True)
 
