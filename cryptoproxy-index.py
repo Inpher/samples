@@ -27,11 +27,13 @@ unpad = lambda s : s[:-ord(s[len(s)-1:])]
 # But when buffer get to high or delay go too down, you can brake things
 listen_port = 8984
 buffer_size = 4096*2
-delay = 0.0001
+delay = 1 # server mode
+#delay = 0.01 #testing
 
 # Solr Server
-solr_host = 'marvel.inpher.io'
-solr_port = '8080'
+#solr_host = 'marvel.inpher.io'
+solr_host = 'localhost'
+solr_port = '8983'
 solr_timeout = 2 # seconds
 solr_collection = 'GB0010001_Customer'
 solr_url = 'http://' + solr_host + ':' + solr_port + '/solr/' + solr_collection + '/update'
