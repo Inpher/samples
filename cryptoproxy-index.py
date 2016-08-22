@@ -183,7 +183,7 @@ def light_Solr_doc(data):
 
     field_t = ET.Element('field')
     field_t.attrib = { 'name' : tag+'enc'}
-    field_t.text =  generate_trapdoor(root.find('name1').text.strip())
+    field_t.text =  generate_trapdoor(root.find('name1List').find('name1').text.strip())
     doc_root.insert(0,field_t)
 
     return ET.tostring(solr_root)
