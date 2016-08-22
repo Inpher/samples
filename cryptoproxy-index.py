@@ -33,7 +33,7 @@ delay = 1 # server mode
 # Solr Server
 #solr_host = 'marvel.inpher.io'
 solr_host = 'localhost'
-solr_port = '8983'
+solr_port = '9090'
 solr_timeout = 2 # seconds
 solr_collection = 'GB0010001_Customer'
 solr_url = 'http://' + solr_host + ':' + solr_port + '/solr/' + solr_collection + '/update'
