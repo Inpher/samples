@@ -178,7 +178,7 @@ def light_Solr_doc(data):
     tag = 'table'
     field_e = ET.Element('field')
     field_e.attrib = { 'name' : tag}
-    field_e.text =  root.find('name1').text.strip()
+    field_e.text =  root.find('name1List').find('name1').text.strip()
     doc_root.insert(0,field_e)
 
     field_t = ET.Element('field')
