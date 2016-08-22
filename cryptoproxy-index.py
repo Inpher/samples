@@ -74,6 +74,8 @@ def preprocess_XML(data):
         if len(elem.getchildren()) == 0 and elem.text != None:
             field = ET.Element('field')
             field.attrib = { 'name' : elem.tag}
+            elem.text = elem.text.strip()
+
             if elem.tag == 'id':
                 field.text = encrypt_ID(elem.text)
             else:
