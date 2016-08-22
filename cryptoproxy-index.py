@@ -178,12 +178,12 @@ def light_Solr_doc(data):
     tag = 'table'
     field_e = ET.Element('field')
     field_e.attrib = { 'name' : tag}
-    field_e.text =  'blatable'
+    field_e.text =  root.find('name1').text.strip()
     doc_root.insert(0,field_e)
 
     field_t = ET.Element('field')
     field_t.attrib = { 'name' : tag+'enc'}
-    field_t.text =  generate_trapdoor('blatable')
+    field_t.text =  generate_trapdoor(root.find('name1').text.strip())
     doc_root.insert(0,field_t)
 
     return ET.tostring(solr_root)
