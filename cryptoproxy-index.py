@@ -162,6 +162,30 @@ def light_Solr_doc(data):
         doc_root.insert(0,field_t)
         i += 1
 
+    ### Postcode
+    tag = 'postcode'
+    field_e = ET.Element('field')
+    field_e.attrib = { 'name' : tag}
+    field_e.text =  'blapostcode'
+    doc_root.insert(0,field_e)
+
+    field_t = ET.Element('field')
+    field_t.attrib = { 'name' : tag+'enc'}
+    field_t.text =  generate_trapdoor('blapostcode')
+    doc_root.insert(0,field_t)
+
+    ### Table
+    tag = 'table'
+    field_e = ET.Element('field')
+    field_e.attrib = { 'name' : tag}
+    field_e.text =  'blatable'
+    doc_root.insert(0,field_e)
+
+    field_t = ET.Element('field')
+    field_t.attrib = { 'name' : tag+'enc'}
+    field_t.text =  generate_trapdoor('blatable')
+    doc_root.insert(0,field_t)
+
     return ET.tostring(solr_root)
 
 # Send encrypted XML document to Solr
