@@ -7,28 +7,17 @@ import sys
 import hmac
 import hashlib
 import base64
-import re
+import json
 from Crypto.Cipher import AES
 from Crypto import Random
+from BaseHTTPServer import BaseHTTPRequestHandler
+from StringIO import StringIO
 import urllib
 import urlparse
 
-#### Server stiff
-# Changing the buffer_size and delay, you can improve the speed and bandwidth.
-# But when buffer get to high or delay go too down, you can brake things
-buffer_size = 4096
-delay = 0.1
-solr_port = 9090
-solr_host = 'localhost'
-forward_to = (solr_host, solr_port)
-
-#### Crypto stuff
+# Crypto stuff
 search_secret_key = 'search-secret-shared-key-goes-here'
 path_secret_key = hashlib.md5('path-secret-shared-key-goes-here').digest()
-# AES CBC Blocksize and padding
-BS = 16
-pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS)
-unpad = lambda s : s[:-ord(s[len(s)-1:])]
 
 # Generate trapdoors for the index
 def generate_trapdoor(data):
@@ -36,46 +25,58 @@ def generate_trapdoor(data):
     # Returning as b64 instead of hex`
     return base64.b64encode(trapdoor_generator.digest()).decode()
 
+# Trapyfy all json fields execpt id which needs to be encrypted
+def encrypt_json(json_str):
+    data = json.loads(json_str)
+    for key in data:
+        if key == 'id':
+            data[key] = encrypt_path(data[key])
+        else:
+            data[key] =  " ".join(map(lambda word: generate_trapdoor(word), data[key].split()))
+    return json.dumps(data)
+
+# Decrypt the ID field
+def decrypt_json(json_str):
+    data = json.loads(json_str)
+    for key in data:
+        if key == 'id':
+            data[key] = decrypt_path(data[key])
+    return json.dumps(data)
+
+# AES CBC Blocksize and padding
+BS = 16
+pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS)
+unpad = lambda s : s[:-ord(s[len(s)-1:])]
+
+def encrypt_path(path):
+    raw = pad(path)
+    iv = Random.new().read(AES.block_size)
+    cipher = AES.new(path_secret_key, AES.MODE_CBC, iv)
+    return base64.b64encode(iv + cipher.encrypt(raw))
+
 def decrypt_path(encPath):
     enc = base64.b64decode(encPath)
     iv = enc[:16]
     cipher = AES.new(path_secret_key, AES.MODE_CBC, iv)
     return unpad(cipher.decrypt(enc[16:]))
 
-def get_HTTP_path(http_string):
-    ind1 = http_string.find('\r\n')
-    http_l1 = http_string[0:ind1].split(' ')
-    return http_l1[1]
+# Changing the buffer_size and delay, you can improve the speed and bandwidth.
+# But when buffer get to high or delay go too down, you can brake things
+buffer_size = 4096
+delay = 0.0001
+#forward_to = ('localhost', 8983)
+forward_to = ('localhost', 8984)
 
-def reassemble_HTTP_raw(http_orig, new_path):
-    ind1 = http_orig.find('\r\n')
-    http_l1 = http_orig[0:ind1].split(' ')
-    http_rest = http_orig[ind1+1:]
-    http_l1[1] = new_path
-    http_l1 = ' '.join(http_l1)
-    return http_l1 + http_rest
+class HTTPRequest(BaseHTTPRequestHandler):
+    def __init__(self, request_text):
+        self.rfile = StringIO(request_text)
+        self.raw_requestline = self.rfile.readline()
+        self.error_code = self.error_message = None
+        self.parse_request()
 
-def modify_query(query_str):
-    # query = "text:*queryword*"
-    # enc_query = "_text_:enc(queryword)"
-
-    ## Deconstruct
-    url = urlparse.urlsplit(urllib.unquote(get_HTTP_path(query_str)))
-    query = urlparse.parse_qs(url[3])
-    query_qparam = query['q'][0]
-
-    ## Modify
-    split = query_qparam.split(':')
-    split[1] = generate_trapdoor(re.sub('[*]','',split[1]))
-    split[0] = '_text_'
-    mod_query_qparam = ':'.join(split)
-
-    ## Reconstruct
-    query['q'][0] = mod_query_qparam.encode('utf-8')
-    lst = list(url)
-    lst[3] = urllib.urlencode(query,doseq=True)
-
-    return reassemble_HTTP_raw(query_str, urlparse.urlunsplit(tuple(lst)))
+    def send_error(self, code, message):
+        self.error_code = code
+        self.error_message = message
 
 class Forward:
     def __init__(self):
@@ -146,15 +147,21 @@ class TheServer:
         del self.channel[self.s]
 
     def on_recv(self):
+        # here we can parse and/or modify the data before send forward
+        out_data = self.data
+
         # Proxy -> Solr
-        if self.channel[self.s].getpeername()[1] == 9090:
-            out_data = modify_query(self.data)
-            print "Sending data do Solr:\n" + out_data
+        if self.channel[self.s].getpeername()[1] == 8984:
+            #out_data = generate_trapdoor(out_data)
+            #out_data = encrypt_path(out_data)
+            #out_data = encrypt_json(out_data)
+            request = HTTPRequest(out_data)
+            print "HTTP: " + urlparse.parse_qs(urlparse.urlparse(urllib.unquote(request.path))[4])['q']
+            #print "Sending data do Solr:\n" + out_data
 
         # Proxy -> Client
         else:
-            out_data = self.data
-            #out_data = decrypt_json(out_data)
+            out_data = decrypt_json(out_data)
             print "Sending data do Client:\n" + out_data
 
         # Forward packet
@@ -162,6 +169,7 @@ class TheServer:
 
 if __name__ == '__main__':
         # Here we define the listen-port
+        #server = TheServer('', 9090)
         server = TheServer('', 8983)
         try:
             server.main_loop()
