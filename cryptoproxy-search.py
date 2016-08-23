@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# found on http://voorloopnul.com/blog/a-python-proxy-in-less-than-100-lines-of-code/
 import socket
 import select
 import time
@@ -71,6 +70,7 @@ def get_HTTP_xml(http_string):
     return http_string[ind1:]
 
 def reassemble_HTTP_xml(http_orig, new_xml):
+    new_xml = '<?xml version="1.0" encoding="UTF-8"?>\n'+new_xml+'\n'
     ind_xml = http_orig.find('<?xml')
     ind_len = http_orig.find('Content-Length:')
     ind_nwl = [m.start() for m in re.finditer('\r\n', http_orig)]
@@ -107,6 +107,8 @@ def modify_query(query_str):
 
 def modify_response(response_str):
     root = ET.fromstring(get_HTTP_xml(response_str));
+    print "ROOT"
+    print get_HTTP_xml(response_str)
     result = root.find('result')
     if result != None:
         for doc in result:
@@ -196,9 +198,6 @@ class TheServer:
 
         # Proxy -> Client
         else:
-            #out_data = decrypt_json(out_data)
-            #print hex(self.data)
-            #print parse(io.BytesIO(self.data))
             out_data = modify_response(self.data)
             print "Sending data do Client:\n" + out_data
 
