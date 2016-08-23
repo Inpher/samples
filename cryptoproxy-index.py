@@ -148,8 +148,8 @@ def create_field(solr_tag,value):
     field_t = ET.Element('field')
     field_e.attrib = { 'name' : solr_tag}
     field_t.attrib = { 'name' : 'ENC'+solr_tag}
-    #field_e.text =  encrypt(value)
-    field_e.text =  value
+    field_e.text =  encrypt(value)
+    #field_e.text =  value
     field_t.text =  generate_trapdoor(value)
     return [field_e , field_t]
 

@@ -12,6 +12,7 @@ from Crypto.Cipher import AES
 from Crypto import Random
 import urllib
 import urlparse
+import xml.etree.ElementTree as ET
 
 #### Server stiff
 # Changing the buffer_size and delay, you can improve the speed and bandwidth.
@@ -30,134 +31,6 @@ BS = 16
 pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS)
 unpad = lambda s : s[:-ord(s[len(s)-1:])]
 
-def parse(f):
-    h = lambda s: ' '.join('%.2X' % ord(x) for x in s) # format as hex
-    p = lambda s: sum(ord(x)*256**i for i, x in enumerate(reversed(s))) # parse integer
-    magic = f.read(2)
-    assert magic == '\xAC\xED', h(magic) # STREAM_MAGIC
-    assert p(f.read(2)) == 5 # STREAM_VERSION
-    handles = []
-    def parse_obj():
-        b = f.read(1)
-        if not b:
-            raise StopIteration # not necessarily the best thing to throw here.
-        if b == '\x70': # p TC_NULL
-            return None
-        elif b == '\x71': # q TC_REFERENCE
-            handle = p(f.read(4)) - 0x7E0000 # baseWireHandle
-            o = handles[handle]
-            return o[1]
-        elif b == '\x74': # t TC_STRING
-            string = f.read(p(f.read(2))).decode('utf-8')
-            handles.append(('TC_STRING', string))
-            return string
-        elif b == '\x75': # u TC_ARRAY
-            data = []
-            cls = parse_obj()
-            size = p(f.read(4))
-            handles.append(('TC_ARRAY', data))
-            assert cls['_name'] in ('[B', '[I'), cls['_name']
-            for x in range(size):
-                data.append(f.read({'[B': 1, '[I': 4}[cls['_name']]))
-            return data
-        elif b == '\x7E': # ~ TC_ENUM
-            enum = {}
-            enum['_cls'] = parse_obj()
-            handles.append(('TC_ENUM', enum))
-            enum['_name'] = parse_obj()
-            return enum
-        elif b == '\x72': # r TC_CLASSDESC
-            cls = {'fields': []}
-            full_name = f.read(p(f.read(2)))
-            cls['_name'] = full_name.split('.')[-1] # i don't care about full path
-            f.read(8) # uid
-            cls['flags'] = f.read(1)
-            handles.append(('TC_CLASSDESC', cls))
-            assert cls['flags'] in ('\2', '\3', '\x0C', '\x12'), h(cls['flags'])
-            b = f.read(2)
-            for i in range(p(b)):
-                typ = f.read(1)
-                name = f.read(p(f.read(2)))
-                fcls = parse_obj() if typ in 'L[' else ''
-                cls['fields'].append((name, typ, fcls.split('/')[-1])) # don't care about full path
-            b = f.read(1)
-            assert b == '\x78', h(b)
-            cls['parent'] = parse_obj()
-            return cls
-        # TC_OBJECT
-        assert b == '\x73', (h(b), h(f.read(4)), repr(f.read(50)))
-        obj = {}
-        obj['_cls'] = parse_obj()
-        obj['_name'] = obj['_cls']['_name']
-        handle = len(handles)
-        parents = [obj['_cls']]
-        while parents[0]['parent']:
-            parents.insert(0, parents[0]['parent'])
-        handles.append(('TC_OBJECT', obj))
-        for cls in parents:
-            for name, typ, fcls in cls['fields'] if cls['flags'] in ('\2', '\3') else []:
-                if typ == 'I': # Integer
-                    obj[name] = p(f.read(4))
-                elif typ == 'S': # Short
-                    obj[name] = p(f.read(2))
-                elif typ == 'J': # Long
-                    obj[name] = p(f.read(8))
-                elif typ == 'Z': # Bool
-                    b = f.read(1)
-                    assert p(b) in (0, 1)
-                    obj[name] = bool(p(b))
-                elif typ == 'F': # Float
-                    obj[name] = h(f.read(4))
-                elif typ in 'BC': # Byte, Char
-                    obj[name] = f.read(1)
-                elif typ in 'L[': # Object, Array
-                    obj[name] = parse_obj()
-                else: # Unknown
-                    assert False, (name, typ, fcls)
-            if cls['flags'] in ('\3', '\x0C'): # SC_WRITE_METHOD, SC_BLOCKDATA
-                b = f.read(1)
-                if b == '\x77': # see the readObject / writeObject methods
-                    block = f.read(p(f.read(1)))
-                    if cls['_name'].endswith('HashMap') or cls['_name'].endswith('Hashtable'):
-                        # http://javasourcecode.org/html/open-source/jdk/jdk-6u23/java/util/HashMap.java.html
-                        # http://javasourcecode.org/html/open-source/jdk/jdk-6u23/java/util/Hashtable.java.html
-                        assert len(block) == 8, h(block)
-                        size = p(block[4:])
-                        obj['data'] = [] # python doesn't allow dicts as keys
-                        for i in range(size):
-                            k = parse_obj()
-                            v = parse_obj()
-                            obj['data'].append((k, v))
-                        try:
-                            obj['data'] = dict(obj['data'])
-                        except TypeError:
-                            pass # non hashable keys
-                    elif cls['_name'].endswith('HashSet'):
-                        # http://javasourcecode.org/html/open-source/jdk/jdk-6u23/java/util/HashSet.java.html
-                        assert len(block) == 12, h(block)
-                        size = p(block[-4:])
-                        obj['data'] = []
-                        for i in range(size):
-                            obj['data'].append(parse_obj())
-                    elif cls['_name'].endswith('ArrayList'):
-                        # http://javasourcecode.org/html/open-source/jdk/jdk-6u23/java/util/ArrayList.java.html
-                        assert len(block) == 4, h(block)
-                        obj['data'] = []
-                        for i in range(obj['size']):
-                            obj['data'].append(parse_obj())
-                    else:
-                        assert False, cls['_name']
-                    b = f.read(1)
-                assert b == '\x78', h(b) + ' ' + repr(f.read(30)) # TC_ENDBLOCKDATA
-        handles[handle] = ('py', obj)
-        return obj
-    objs = []
-    while 1:
-        try:
-            objs.append(parse_obj())
-        except StopIteration:
-            return objs
-
 # Generate trapdoors for the index
 def generate_trapdoor(data):
     # get rid of trailing/leading spaces
@@ -174,7 +47,7 @@ def generate_trapdoor(data):
     # Returning as b64 instead of hex`
     return " ".join(enc_values)
 
-def decrypt_path(encPath):
+def decrypt(encPath):
     enc = base64.b64decode(encPath)
     iv = enc[:16]
     cipher = AES.new(path_secret_key, AES.MODE_CBC, iv)
@@ -192,6 +65,22 @@ def reassemble_HTTP_raw(http_orig, new_path):
     http_l1[1] = new_path
     http_l1 = ' '.join(http_l1)
     return http_l1 + http_rest
+
+def get_HTTP_xml(http_string):
+    ind1 = http_string.find('<?xml')
+    return http_string[ind1:]
+
+def reassemble_HTTP_xml(http_orig, new_xml):
+    ind_xml = http_orig.find('<?xml')
+    ind_len = http_orig.find('Content-Length:')
+    ind_nwl = [m.start() for m in re.finditer('\r\n', http_orig)]
+    http_begin = http_orig[0:ind_xml]
+    old_len = http_begin[ind_len+16:ind_nwl[2]]
+    print old_len
+    new_len = str(len(new_xml))
+    print new_len
+    http_begin = http_begin.replace('Content-Length: '+old_len, 'Content-Length: '+new_len)
+    return http_begin + new_xml
 
 def modify_query(query_str):
     # query = "text:*queryword*"
@@ -215,6 +104,21 @@ def modify_query(query_str):
     lst[3] = urllib.urlencode(query,doseq=True)
 
     return reassemble_HTTP_raw(query_str, urlparse.urlunsplit(tuple(lst)))
+
+def modify_response(response_str):
+    root = ET.fromstring(get_HTTP_xml(response_str));
+    result = root.find('result')
+    if result != None:
+        for doc in result:
+            for elem in doc:
+                if elem.attrib['name'] == 'id':
+                    elem.text = decrypt(elem.text)
+                else:
+                    child = elem.find('str')
+                    child.text = decrypt(child.text)
+
+    return reassemble_HTTP_xml(response_str,ET.tostring(root))
+
 
 class Forward:
     def __init__(self):
@@ -292,10 +196,12 @@ class TheServer:
 
         # Proxy -> Client
         else:
-            out_data = self.data
             #out_data = decrypt_json(out_data)
-            print parse(self.data)
+            #print hex(self.data)
+            #print parse(io.BytesIO(self.data))
+            out_data = modify_response(self.data)
             print "Sending data do Client:\n" + out_data
+
 
         # Forward packet
         self.channel[self.s].send(out_data)
