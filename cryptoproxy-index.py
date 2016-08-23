@@ -135,7 +135,6 @@ def light_Solr_doc(data):
 def sanity_check(xml_root):
     required_attributes = ['name','address','postcode','mnemonic','id','table']
     attributes_present = [child.attrib['name'] for child in xml_root]
-    print attributes_present
 
     for attr in required_attributes:
         if not attr in attributes_present:
