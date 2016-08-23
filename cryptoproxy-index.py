@@ -40,52 +40,25 @@ solr_url = 'http://' + solr_host + ':' + solr_port + '/solr/' + solr_collection 
 
 # Generate trapdoors for the index
 def generate_trapdoor(data):
-    trapdoor_generator = hmac.new(search_secret_key, data, hashlib.sha256)
+    # get rid of trailing/leading spaces
+    data = data.strip()
+    # split whitespaces
+    values = data.split(' ')
+
+    # hmac each keyword seperately
+    enc_values = []
+    for v in values:
+        trapdoor_generator = hmac.new(search_secret_key, v, hashlib.sha256)
+        enc_values.append(base64.b64encode(trapdoor_generator.digest()).decode())
+
     # Returning as b64 instead of hex`
-    return base64.b64encode(trapdoor_generator.digest()).decode()
+    return " ".join(enc_values)
 
 def encrypt(path):
     raw = pad(path)
     iv = Random.new().read(AES.block_size)
     cipher = AES.new(path_secret_key, AES.MODE_CBC, iv)
     return base64.b64encode(iv + cipher.encrypt(raw))
-
-# Trapyfy all XML leaf fields execpt id which needs to be encrypted
-def preprocess_XML(data):
-    # Creating blank Solr XML
-    solr_root = ET.Element('add')
-    solr_root.attrib = {'commitWithin' : '1000', 'overwrite' : 'true'}
-    doc_root = ET.SubElement(solr_root,'doc')
-
-    # Reading data from Temenos (XML)
-    sio = StringIO.StringIO(data)
-
-    # Skip first garbled bytes (no clue why this is needed for java...)
-    if data[0] != '<':
-        sio.read(2);
-
-    # Read the rest
-    out_data = sio.read()
-    # Construct XML tree
-    root = ET.fromstring(out_data);
-    # Iterate through all leafs
-    for elem in root.iter():
-        # leafs
-        if len(elem.getchildren()) == 0 and elem.text != None:
-            field = ET.Element('field')
-            field.attrib = { 'name' : elem.tag}
-            elem.text = elem.text.strip()
-
-            if elem.tag == 'id':
-                field.text = encrypt(elem.text)
-            else:
-                field.text = generate_trapdoor(elem.text)
-
-            # Append field to solr_doc
-            doc_root.insert(0,field)
-
-    return ET.tostring(solr_root)
-
 
 def light_Solr_doc(data):
     # Creating blank Solr XML
@@ -94,6 +67,8 @@ def light_Solr_doc(data):
     doc_root = ET.SubElement(solr_root,'doc')
 
     # Reading data from Temenos (XML)
+    ns = '{http://www.temenos.com/T24/event/IFSampleEventFlow/CUSTOMER}'
+    namespaces = {'tns': 'http://www.temenos.com/T24/event/IFSampleEventFlow/CUSTOMER'}
     sio = StringIO.StringIO(data)
 
     # Skip first garbled bytes (no clue why this is needed for java...)
@@ -106,89 +81,62 @@ def light_Solr_doc(data):
     root = ET.fromstring(out_data);
 
     ### ID
-    tag = 'id'
-    t_tag = "tns:"+tag
-    field_e = ET.Element('field')
-    field_e.attrib = { 'name' : tag}
+    tags = ['name1List','nameAddress','postcode','mnemonic','id','familyName']
+    for tag in tags:
+        t_tag = "tns:"+tag
+        elem = root.find(t_tag,namespaces)
 
-    #field_e.text =  encrypt(root.find(tag).text.strip())
-    field_e.text =  root.find(t_tag).text.strip()
-    doc_root.insert(0,field_e)
+        if elem != None:
+            # Solr field table
+            if elem.tag == ns+'name1List':
+                sub_elem = elem.find('tns:name1',namespaces)
+                if sub_elem != None:
+                    fields = create_field('table',sub_elem.text.strip())
 
-    field_t = ET.Element('field')
-    field_t.attrib = { 'name' : tag+'enc'}
-    field_t.text =  generate_trapdoor(root.find(t_tag).text.strip())
-    doc_root.insert(0,field_t)
+            # Solr field address
+            elif elem.tag == ns+'nameAddress':
+                fields = create_field('address',elem.text.strip())
 
-    ### Mnemonic
-    tag = 'mnemonic'
-    t_tag = "tns:"+tag
-    field_e = ET.Element('field')
-    field_e.attrib = { 'name' : tag}
-    #field_e.text =  encrypt(root.find(tag).text.strip())
-    field_e.text =  root.find(t_tag).text.strip()
-    doc_root.insert(0,field_e)
+            # Solr field postcode
+            elif elem.tag == ns+'postcode':
+                fields = create_field('postcode',elem.text.strip())
 
-    field_t = ET.Element('field')
-    field_t.attrib = { 'name' : tag+'enc'}
-    field_t.text =  generate_trapdoor(root.find(t_tag).text.strip())
-    doc_root.insert(0,field_t)
+            # Solr field name
+            elif elem.tag == ns+'familyName':
+                fields = create_field('name',elem.text.strip())
 
-    ### Name
-    tag = 'name'
-    field_e = ET.Element('field')
-    field_e.attrib = { 'name' : tag}
-    #field_e.text =  encrypt(root.find('familyName').text.strip())
-    field_e.text =  root.find('tns:familyName').text.strip()
-    doc_root.insert(0,field_e)
+            # Solr field == xml field (id,mnemonic)
+            else:
+                fields = create_field(tag,elem.text.strip())
 
-    field_t = ET.Element('field')
-    field_t.attrib = { 'name' : tag+'enc'}
-    field_t.text =  generate_trapdoor(root.find('tns:familyName').text.strip())
-    doc_root.insert(0,field_t)
+            doc_root.insert(0,fields[0])
+            doc_root.insert(0,fields[1])
 
-    ### Address
-    tag = 'address'
-    field_e = ET.Element('field')
-    field_e.attrib = { 'name' : tag}
-    values = root.find('tns:nameAddress').text.strip()
-    #field_e.text =  encrypt(values)
-    field_e.text =  values
-    doc_root.insert(0,field_e)
 
+    ## Index all other non empty fields
+    already_visited = [ns + s for s in tags]
     i = 0
-    for value in values.split():
-        field_t = ET.Element('field')
-        field_t.attrib = { 'name' : tag+'enc'+str(i)}
-        field_t.text =  generate_trapdoor(value)
-        doc_root.insert(0,field_t)
-        i += 1
-
-    ### Postcode
-    tag = 'postcode'
-    field_e = ET.Element('field')
-    field_e.attrib = { 'name' : tag}
-    field_e.text =  'blapostcode'
-    doc_root.insert(0,field_e)
-
-    field_t = ET.Element('field')
-    field_t.attrib = { 'name' : tag+'enc'}
-    field_t.text =  generate_trapdoor('blapostcode')
-    doc_root.insert(0,field_t)
-
-    ### Table
-    tag = 'table'
-    field_e = ET.Element('field')
-    field_e.attrib = { 'name' : tag}
-    field_e.text =  root.find('tns:name1List').find('tns:name1').text.strip()
-    doc_root.insert(0,field_e)
-
-    field_t = ET.Element('field')
-    field_t.attrib = { 'name' : tag+'enc'}
-    field_t.text =  generate_trapdoor(root.find('tns:name1List').find('tns:name1').text.strip())
-    doc_root.insert(0,field_t)
+    for elem in root.iter():
+        # leafs
+        if len(elem.getchildren()) == 0 and elem.text != None and elem.tag not in already_visited:
+            field = ET.Element('field')
+            field.attrib = { 'name' : 'ENCfield'+str(i)}
+            elem.text = elem.text.strip()
+            field.text = generate_trapdoor(elem.text)
+            doc_root.insert(0,field)
+            i+=1
 
     return ET.tostring(solr_root)
+
+def create_field(solr_tag,value):
+    field_e = ET.Element('field')
+    field_t = ET.Element('field')
+    field_e.attrib = { 'name' : solr_tag}
+    field_t.attrib = { 'name' : 'ENC'+solr_tag}
+    #field_e.text =  encrypt(value)
+    field_e.text =  value
+    field_t.text =  generate_trapdoor(value)
+    return [field_e , field_t]
 
 # Send encrypted XML document to Solr
 def commit_solr(out_data):
@@ -243,7 +191,6 @@ class TheServer:
 
     def on_recv(self):
         # Proxy -> Solr
-        #out_data = preprocess_XML(self.data)
         out_data = light_Solr_doc(self.data)
         commit_solr(out_data)
         print 'Data sent to Solr'

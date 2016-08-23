@@ -1,224 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CUSTOMER xmlns:tns="http://www.temenos.com/T24/event/IFSampleEventFlow/CUSTOMER" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.temenos.com/T24/event/IFSampleEventFlow/CUSTOMER IFSampleEventFlow-CUSTOMER.xsd">
-	<eventCommon>
-		<application xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">
-			CUSTOMER
-		</application>
-		<companyId xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">
-			GB0010001
-		</companyId>
-		<operator xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">
-			INPUTTER
-		</operator>
-		<today xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">
-			2016-04-22
-		</today>
-		<transactionStage xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">
-			INPUT-AUTHORISE
-		</transactionStage>
-		<eventId xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">
-			3cf63cc1-b46d-4b59-9e7c-03b514ea1cc4
-		</eventId>
-		<creationTime xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">
-			2016-08-16T13:40:19.068Z
-		</creationTime>
-	</eventCommon>
-	<id>
-		100390
-	</id>
-	<accountOfficer>
-		74
-	</accountOfficer>
-	<phone1Group index="1">
-		<phone1>
-			02-8236-0006
-		</phone1>
-		<sms1>
-			02-9498 9910
-		</sms1>
-		<email1>
-			contact@iannorman.com
-		</email1>
-	</phone1Group>
-	<addressList />
-	<altCusIdList />
-	<amlCheck>
-		NULL
-	</amlCheck>
-	<amlResult>
-		NULL
-	</amlResult>
-	<employmentStatusGroup index="1">
-		<employmentStatus>
-			OTHER
-		</employmentStatus>
-		<employersAddList />
-	</employmentStatusGroup>
-	<authoriser>
-		69565_OFFICER_OFS_SEAT
-	</authoriser>
-	<checkLiab>
-		""
-	</checkLiab>
-	<clsCparty>
-		NO
-	</clsCparty>
-	<coCode>
-		GB0010001
-	</coCode>
-	<companyBook>
-		GB0010001
-	</companyBook>
-	<countryList />
-	<crUserProfileTypeGroup index="1">
-		<crUserProfileType>
-			VALUED.CUSTOMER
-		</crUserProfileType>
-		<crCalcProfile>
-			11
-		</crCalcProfile>
-		<crUserProfile>
-			11
-		</crUserProfile>
-	</crUserProfileTypeGroup>
-	<crProfileTypeGroup index="1">
-		<crProfileType>
-			VALUED.CUSTOMER
-		</crProfileType>
-		<crProfile>
-			11
-		</crProfile>
-	</crProfileTypeGroup>
-	<currNo>
-		1
-	</currNo>
-	<customerCode>
-		100390
-	</customerCode>
-	<customerNo>
-		100390
-	</customerNo>
-	<customerRatingList>
-		<customerRating index="1">
-			2
-		</customerRating>
-	</customerRatingList>
-	<customerSince>
-		1997-02-03
-	</customerSince>
-	<customerStatus>
-		2
-	</customerStatus>
-	<dateOfBirth>
-		1975-10-23
-	</dateOfBirth>
-	<dateTimeList>
-		<dateTime index="1">
-			1604222006
-		</dateTime>
-	</dateTimeList>
-	<deptCode>
-		1
-	</deptCode>
-	<familyName>
-		Norman
-	</familyName>
-	<fax1List />
-	<formerVisTypeGroup index="1">
-		<formerVisCommentList />
-	</formerVisTypeGroup>
-	<furtherDetailsList />
-	<gender>
-		MALE
-	</gender>
-	<holdingsPivotList />
-	<industry>
-		1000
-	</industry>
-	<inputterList>
-		<inputter index="1">
-			69565_OFFICER__OFS_SEAT
-		</inputter>
-	</inputterList>
-	<interestsList />
-	<internetBankingService>
-		NULL
-	</internetBankingService>
-	<language>
-		1
-	</language>
-	<legalIdDocNameList />
-	<maritalStatus>
-		MARRIED
-	</maritalStatus>
-	<mnemonic>
-		NORMANI
-	</mnemonic>
-	<mobileBankingService>
-		NULL
-	</mobileBankingService>
-	<name1List>
-		<name1 language="GB">
-			Mr Ian Norman
-		</name1>
-	</name1List>
-	<name2List />
-	<nameAddress>
-		Ian Norman Mr Ian Norman  CNR SOUTH DOWLING ST AND DACEY AVE MOORE PARK SYDNEY NSWAUSTRALIA
-	</nameAddress>
-	<nationality>
-		AU
-	</nationality>
-	<noOfDependents>
-		3
-	</noOfDependents>
-	<offPhoneList />
-	<otherNationalityList />
-	<otherOfficerList />
-	<overrideList />
-	<overrideReasonList />
-	<pastimesList />
-	<postCodeList />
-	<postingRestrictList />
-	<reportTemplate>
-		Standard
-	</reportTemplate>
-	<residence>
-		AU
-	</residence>
-	<sector>
-		1001
-	</sector>
-	<sectorName>
-		GB=Individual
-	</sectorName>
-	<shortNameList>
-		<shortName language="GB">
-			Ian Norman
-		</shortName>
-	</shortNameList>
-	<socialNtwIdsList />
-	<spokenLanguageList />
-	<streetList>
-		<street language="GB">
-			CNR SOUTH DOWLING ST AND DACEY AVE
-		</street>
-	</streetList>
-	<target>
-		2
-	</target>
-	<taxIdList />
-	<textList />
-	<title>
-		MR
-	</title>
-	<townCountryList>
-		<townCountry language="GB">
-			MOORE PARK SYDNEYNSW AUSTRALIA
-		</townCountry>
-	</townCountryList>
-	<visTypeGroup index="1">
-		<visCommentList />
-		<visInternalReviewList />
-	</visTypeGroup>
-</CUSTOMER>
+<tns:CUSTOMER xmlns:tns="http://www.temenos.com/T24/event/IFSampleEventFlow/CUSTOMER"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.temenos.com/T24/event/IFSampleEventFlow/CUSTOMER IFSampleEventFlow-CUSTOMER.xsd">
+    <tns:eventCommon>
+        <ns0:application xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">CUSTOMER</ns0:application>
+        <ns0:companyId xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">GB0010001</ns0:companyId>
+        <ns0:operator xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">AUTHORISER</ns0:operator>
+        <ns0:today xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">2016-04-22</ns0:today>
+        <ns0:transactionStage xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">INPUT-AUTHORISE
+        </ns0:transactionStage>
+        <ns0:eventId xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">
+            bf510285-2414-4ba1-8fe6-52cc5e05ec3f
+        </ns0:eventId>
+        <ns0:creationTime xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">2016-08-23T16:24:47.023Z
+        </ns0:creationTime>
+    </tns:eventCommon>
+    <tns:id>190180</tns:id>
+    <tns:accountOfficer>1</tns:accountOfficer>
+    <tns:addressList/>
+    <tns:altCusIdList/>
+    <tns:amlCheck>NULL</tns:amlCheck>
+    <tns:amlResult>NULL</tns:amlResult>
+    <tns:employmentStatusGroup index="1">
+        <tns:employersAddList/>
+    </tns:employmentStatusGroup>
+    <tns:authoriser>73339_AUTHORISER</tns:authoriser>
+    <tns:checkLiab>""</tns:checkLiab>
+    <tns:clsCparty>NO</tns:clsCparty>
+    <tns:coCode>GB0010001</tns:coCode>
+    <tns:companyBook>GB0010001</tns:companyBook>
+    <tns:countryList>
+        <tns:country language="GB">USA</tns:country>
+    </tns:countryList>
+    <tns:currNo>1</tns:currNo>
+    <tns:customerCode>190180</tns:customerCode>
+    <tns:customerNo>190180</tns:customerNo>
+    <tns:customerRatingList/>
+    <tns:customerStatus>1</tns:customerStatus>
+    <tns:customerType>ACTIVE</tns:customerType>
+    <tns:dateTimeList>
+        <tns:dateTime index="1">1608231624</tns:dateTime>
+    </tns:dateTimeList>
+    <tns:deptCode>1</tns:deptCode>
+    <tns:familyName>Trump</tns:familyName>
+    <tns:fax1List/>
+    <tns:formerVisTypeGroup index="1">
+        <tns:formerVisCommentList/>
+    </tns:formerVisTypeGroup>
+    <tns:furtherDetailsList/>
+    <tns:gender>MALE</tns:gender>
+    <tns:givenNames>Donald</tns:givenNames>
+    <tns:holdingsPivotList/>
+    <tns:industry>1000</tns:industry>
+    <tns:inputterList>
+        <tns:inputter index="1">73339_INPUTTER__OFS_IRISPA_190180</tns:inputter>
+    </tns:inputterList>
+    <tns:interestsList/>
+    <tns:internetBankingService>NULL</tns:internetBankingService>
+    <tns:language>1</tns:language>
+    <tns:legalIdDocNameList/>
+    <tns:mnemonic>DRUMPF</tns:mnemonic>
+    <tns:mobileBankingService>NULL</tns:mobileBankingService>
+    <tns:name1List>
+        <tns:name1 language="GB">Donald</tns:name1>
+    </tns:name1List>
+    <tns:name2List/>
+    <tns:nameAddress>Trump Donald White House Washington DC</tns:nameAddress>
+    <tns:nationality>US</tns:nationality>
+    <tns:offPhoneList/>
+    <tns:otherNationalityList/>
+    <tns:otherOfficerList/>
+    <tns:overrideList/>
+    <tns:overrideReasonList/>
+    <tns:pastimesList/>
+    <tns:postCodeList>
+        <tns:postCode language="GB">123456</tns:postCode>
+    </tns:postCodeList>
+    <tns:postingRestrictList/>
+    <tns:residence>US</tns:residence>
+    <tns:sector>1001</tns:sector>
+    <tns:sectorName>GB=Individual</tns:sectorName>
+    <tns:shortNameList>
+        <tns:shortName language="GB">Trump</tns:shortName>
+    </tns:shortNameList>
+    <tns:socialNtwIdsList/>
+    <tns:spokenLanguageList/>
+    <tns:streetList>
+        <tns:street language="GB">White House</tns:street>
+    </tns:streetList>
+    <tns:target>999</tns:target>
+    <tns:taxIdList/>
+    <tns:textList/>
+    <tns:title>MR</tns:title>
+    <tns:townCountryList>
+        <tns:townCountry language="GB">Washington DC</tns:townCountry>
+    </tns:townCountryList>
+    <tns:visTypeGroup index="1">
+        <tns:visCommentList/>
+        <tns:visInternalReviewList/>
+    </tns:visTypeGroup>
+</tns:CUSTOMER>
