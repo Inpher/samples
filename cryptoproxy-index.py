@@ -107,29 +107,31 @@ def light_Solr_doc(data):
 
     ### ID
     tag = 'id'
+    t_tag = "tns:"+tag
     field_e = ET.Element('field')
     field_e.attrib = { 'name' : tag}
 
     #field_e.text =  encrypt(root.find(tag).text.strip())
-    field_e.text =  root.find(tag).text.strip()
+    field_e.text =  root.find(t_tag).text.strip()
     doc_root.insert(0,field_e)
 
     field_t = ET.Element('field')
     field_t.attrib = { 'name' : tag+'enc'}
-    field_t.text =  generate_trapdoor(root.find(tag).text.strip())
+    field_t.text =  generate_trapdoor(root.find(t_tag).text.strip())
     doc_root.insert(0,field_t)
 
     ### Mnemonic
     tag = 'mnemonic'
+    t_tag = "tns:"+tag
     field_e = ET.Element('field')
     field_e.attrib = { 'name' : tag}
     #field_e.text =  encrypt(root.find(tag).text.strip())
-    field_e.text =  root.find(tag).text.strip()
+    field_e.text =  root.find(t_tag).text.strip()
     doc_root.insert(0,field_e)
 
     field_t = ET.Element('field')
     field_t.attrib = { 'name' : tag+'enc'}
-    field_t.text =  generate_trapdoor(root.find(tag).text.strip())
+    field_t.text =  generate_trapdoor(root.find(t_tag).text.strip())
     doc_root.insert(0,field_t)
 
     ### Name
@@ -137,19 +139,19 @@ def light_Solr_doc(data):
     field_e = ET.Element('field')
     field_e.attrib = { 'name' : tag}
     #field_e.text =  encrypt(root.find('familyName').text.strip())
-    field_e.text =  root.find('familyName').text.strip()
+    field_e.text =  root.find('tns:familyName').text.strip()
     doc_root.insert(0,field_e)
 
     field_t = ET.Element('field')
     field_t.attrib = { 'name' : tag+'enc'}
-    field_t.text =  generate_trapdoor(root.find('familyName').text.strip())
+    field_t.text =  generate_trapdoor(root.find('tns:familyName').text.strip())
     doc_root.insert(0,field_t)
 
     ### Address
     tag = 'address'
     field_e = ET.Element('field')
     field_e.attrib = { 'name' : tag}
-    values = root.find('nameAddress').text.strip()
+    values = root.find('tns:nameAddress').text.strip()
     #field_e.text =  encrypt(values)
     field_e.text =  values
     doc_root.insert(0,field_e)
@@ -178,12 +180,12 @@ def light_Solr_doc(data):
     tag = 'table'
     field_e = ET.Element('field')
     field_e.attrib = { 'name' : tag}
-    field_e.text =  root.find('name1List').find('name1').text.strip()
+    field_e.text =  root.find('tns:name1List').find('tns:name1').text.strip()
     doc_root.insert(0,field_e)
 
     field_t = ET.Element('field')
     field_t.attrib = { 'name' : tag+'enc'}
-    field_t.text =  generate_trapdoor(root.find('name1List').find('name1').text.strip())
+    field_t.text =  generate_trapdoor(root.find('tns:name1List').find('tns:name1').text.strip())
     doc_root.insert(0,field_t)
 
     return ET.tostring(solr_root)
