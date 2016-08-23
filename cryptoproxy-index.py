@@ -114,6 +114,8 @@ def light_Solr_doc(data):
             doc_root.insert(0,fields[0])
             doc_root.insert(0,fields[1])
 
+    # Check if all required fields are present (needed for search)
+    sanity_check(doc_root)
 
     ## Index all other non empty fields
     already_visited = [ns + s for s in tags]
@@ -129,6 +131,18 @@ def light_Solr_doc(data):
             i+=1
 
     return ET.tostring(solr_root)
+
+def sanity_check(xml_root):
+    required_attributes = ['name','address','postcode','mnemonic','id','table']
+    attributes_present = [child.attrib['name'] for child in xml_root]
+    print attributes_present
+
+    for attr in required_attributes:
+        if not attr in attributes_present:
+            field = ET.Element('field')
+            field.attrib = { 'name' : attr}
+            field.text =  ' - '
+            xml_root.insert(0,field)
 
 def create_field(solr_tag,value):
     field_e = ET.Element('field')
