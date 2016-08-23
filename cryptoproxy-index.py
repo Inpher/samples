@@ -81,7 +81,7 @@ def light_Solr_doc(data):
     root = ET.fromstring(out_data);
 
     ### ID
-    tags = ['name1List','nameAddress','postcode','mnemonic','id','familyName']
+    tags = ['name1List','nameAddress','postCodeList','mnemonic','id','familyName']
     for tag in tags:
         t_tag = "tns:"+tag
         elem = root.find(t_tag,namespaces)
@@ -98,8 +98,10 @@ def light_Solr_doc(data):
                 fields = create_field('address',elem.text.strip())
 
             # Solr field postcode
-            elif elem.tag == ns+'postcode':
-                fields = create_field('postcode',elem.text.strip())
+            elif elem.tag == ns+'postCodeList':
+                sub_elem = elem.find('tns:postCode',namespaces)
+                if sub_elem != None:
+                    fields = create_field('postcode',sub_elem.text.strip())
 
             # Solr field name
             elif elem.tag == ns+'familyName':
