@@ -16,6 +16,7 @@ import xml.etree.ElementTree as ET
 #### Server stiff
 # Changing the buffer_size and delay, you can improve the speed and bandwidth.
 # But when buffer get to high or delay go too down, you can brake things
+debug = True
 buffer_size = 4096
 delay = 0.1
 solr_port = 9090
@@ -76,9 +77,7 @@ def reassemble_HTTP_xml(http_orig, new_xml):
     ind_nwl = [m.start() for m in re.finditer('\r\n', http_orig)]
     http_begin = http_orig[0:ind_xml]
     old_len = http_begin[ind_len+16:ind_nwl[2]]
-    print old_len
     new_len = str(len(new_xml))
-    print new_len
     http_begin = http_begin.replace('Content-Length: '+old_len, 'Content-Length: '+new_len)
     return http_begin + new_xml
 
@@ -95,20 +94,25 @@ def modify_query(query_str):
     split = query_qparam.split(':')
     split[1] = generate_trapdoor(re.sub('[*]','',split[1]))
     split[0] = '_text_'
-    mod_query_qparam = ':'.join(split)
+    mod_query_qparam = (':'.join(split)).encode('utf-8')
 
     ## Reconstruct
-    query['q'][0] = mod_query_qparam.encode('utf-8')
+    query['q'][0] = mod_query_qparam
     query['fl'] = 'id,mnemonic,name,address,postcode,table'.encode('utf-8')
     lst = list(url)
     lst[3] = urllib.urlencode(query,doseq=True)
 
+    if debug:
+        print "\nDEBUG: Receiving Query..."
+        print "  Plain query            :    " + query_qparam
+        print "  Encrypting query       :    " + mod_query_qparam
+        print ""
+
     return reassemble_HTTP_raw(query_str, urlparse.urlunsplit(tuple(lst)))
 
 def modify_response(response_str):
-    root = ET.fromstring(get_HTTP_xml(response_str));
-    print "ROOT"
-    print get_HTTP_xml(response_str)
+    response_xml = get_HTTP_xml(response_str)
+    root = ET.fromstring(response_xml);
     result = root.find('result')
     if result != None:
         for doc in result:
@@ -119,7 +123,15 @@ def modify_response(response_str):
                     child = elem.find('str')
                     child.text = decrypt(child.text)
 
-    return reassemble_HTTP_xml(response_str,ET.tostring(root))
+    response_xml_decrypted = ET.tostring(root)
+
+    if debug:
+        print "\nDEBUG: Receiving Solr response..."
+        print "Encrypted response     :    \n" + response_xml
+        print "Decrypted response     :    \n" + response_xml_decrypted
+        print ""
+
+    return reassemble_HTTP_xml(response_str,response_xml_decrypted)
 
 
 class Forward:
@@ -194,12 +206,12 @@ class TheServer:
         # Proxy -> Solr
         if self.channel[self.s].getpeername()[1] == 9090:
             out_data = modify_query(self.data)
-            print "Sending data do Solr:\n" + out_data
+            print "Sending data do Solr..."
 
         # Proxy -> Client
         else:
             out_data = modify_response(self.data)
-            print "Sending data do Client:\n" + out_data
+            print "Sending data do Client:..."
 
 
         # Forward packet

@@ -12,6 +12,9 @@ import StringIO
 import requests
 import xml.etree.ElementTree as ET
 
+##### debug
+debug = True
+
 ###### Crypto stuff
 # Keys
 search_secret_key = 'search-secret-shared-key-goes-here'
@@ -32,7 +35,7 @@ delay = 1 # server mode
 
 # Solr Server
 #solr_host = 'marvel.inpher.io'
-solr_host = 'localhost'
+solr_host = 'marvel.inpher.io'
 solr_port = '9090'
 solr_timeout = 2 # seconds
 solr_collection = 'GB0010001_Customer'
@@ -129,6 +132,12 @@ def light_Solr_doc(data):
             field.text = generate_trapdoor(elem.text)
             doc_root.insert(0,field)
             i+=1
+
+    if debug:
+        print "DEBUG: Sending Encrypted Document to SOLR"
+        print "========================================="
+        print ET.tostring(solr_root)
+        print "========================================="
 
     return ET.tostring(solr_root)
 
