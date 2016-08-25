@@ -92,7 +92,7 @@ def modify_query(query_str):
 
     ## Modify
     split = query_qparam.split(':')
-    split[1] = generate_trapdoor(re.sub('[*]','',split[1]))
+    split[1] = '"'+generate_trapdoor(re.sub('[*]','',split[1]))+'"'
     split[0] = '_text_'
     mod_query_qparam = (':'.join(split)).encode('utf-8')
 
