@@ -1,0 +1,22 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'org.inpher'
+version = '1.2.2'
+
+description = """clientimpl"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+
+repositories {
+
+    mavenCentral()
+     maven { url "http://dp.inpher.io/maven" }
+}
+dependencies {
+    compile group: 'org.inpher', name: 'clientapi', version:'1.2.2'
+    runtime group: 'org.inpher', name: 'clientimpl-all', version:'1.2.2'
+}
