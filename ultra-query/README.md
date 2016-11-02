@@ -4,3 +4,7 @@ The **Inpher \_ultra query module** is a library allowing you to interface with 
 ## Encrypted Query Module Command line Client
 
 This a simple [commandline client](search-cli) for an Encrypted elasticsearch.
+
+## JavaDoc
+
+Find the JavaDoc [here](https://dp.inpher.io/api/encrypted-query-module/v0.6/doc/)
