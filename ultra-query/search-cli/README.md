@@ -51,8 +51,13 @@ In the shell you can type `help` to get a description of all the available comma
 Type `quit` to leave the shell.
 
 ## Example
+Start an elastic backend on docker:
 
-Using the following schema:
+```shell
+docker run --name elastic -td inpher/elastic-frequency:_ultra
+```
+
+Using the following [schema](src/main/resources/default-schema.json):
 
 ```json
 {
@@ -62,7 +67,13 @@ Using the following schema:
 }
 ```
 
-start the cli and insert type followed by ENTER:
+start the cli
+
+```
+./build/install/search-cli/bin/search-cli connect -key src/main/resources/default-key -schema src/main/resources/default-schema.json  -settings src/main/resources/default-es-settings.yml
+```
+
+and type "insert" followed by ENTER:
 
 ```
 > insert

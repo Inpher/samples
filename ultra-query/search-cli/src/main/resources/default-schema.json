@@ -1,4 +1,5 @@
 {
-  "doc_id" : ["retrievable"],
-  "keywords" : ["searchable"]
+  "movie" : ["retrievable"],
+  "firstName" : ["searchable"],
+  "lastName" : ["searchable"]
 }
