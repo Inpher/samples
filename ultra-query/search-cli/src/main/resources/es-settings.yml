@@ -1,0 +1,3 @@
+cluster.name: inpher-es
+network.host: api.inpher.io
+transport.client.initial_nodes: ["api.inpher.io:9300"]
