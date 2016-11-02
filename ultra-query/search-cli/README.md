@@ -54,7 +54,7 @@ Type `quit` to leave the shell.
 Start an elastic backend on docker:
 
 ```shell
-docker run --name elastic -td inpher/elastic-frequency:_ultra
+docker run --name elastic -p 9300:9300 -td inpher/elastic-frequency:_ultra
 ```
 
 Using the following [schema](src/main/resources/default-schema.json):
