@@ -5,6 +5,7 @@
 *.csv
 **/doc/
 **/target/
+**/.idea/
 .project
 .settings
 .classpath
