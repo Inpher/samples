@@ -1,4 +1,4 @@
-package org.inpher.samples.query.spark;
+package org.inpher.samples.encrypt.spark;
 
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.Function2;

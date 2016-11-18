@@ -1,4 +1,4 @@
-package org.inpher.samples.query.spark;
+package org.inpher.samples.encrypt.spark;
 
 import scala.Tuple2;
 

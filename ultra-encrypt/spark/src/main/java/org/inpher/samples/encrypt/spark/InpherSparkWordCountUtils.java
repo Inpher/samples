@@ -1,4 +1,4 @@
-package org.inpher.samples.query.spark;
+package org.inpher.samples.encrypt.spark;
 
 import com.google.gson.Gson;
 import org.apache.spark.SparkConf;
