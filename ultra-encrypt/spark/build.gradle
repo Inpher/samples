@@ -1,0 +1,22 @@
+apply plugin: 'application'
+apply plugin: 'java'
+
+group = 'org.inpher.samples.encrypt'
+version = '0.6'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+mainClassName = "org.inpher.samples.encrypt.spark.GutenbergSparkApp"
+
+repositories {
+    mavenCentral()
+    maven { url "http://dp.inpher.io/maven" }
+}
+
+dependencies {
+    compile 'org.inpher:crypto:0.6'
+    compile 'org.apache.spark:spark-core_2.11:2.0.1'
+    compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.55'
+    compile 'com.google.code.gson:gson:2.8.0'
+}
