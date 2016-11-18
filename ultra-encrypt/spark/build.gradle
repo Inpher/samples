@@ -1,10 +1,13 @@
+apply plugin: 'application'
+apply plugin: 'java'
+
 group = 'org.inpher.samples.encrypt'
 version = '0.6'
 
-apply plugin: 'java'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+mainClassName = "org.inpher.samples.encrypt.spark.GutenbergSparkApp"
 
 repositories {
     mavenCentral()
@@ -16,7 +19,4 @@ dependencies {
     compile 'org.apache.spark:spark-core_2.11:2.0.1'
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.55'
     compile 'com.google.code.gson:gson:2.8.0'
-
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.0.44-beta'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
