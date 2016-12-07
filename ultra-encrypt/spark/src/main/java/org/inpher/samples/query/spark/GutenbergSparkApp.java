@@ -1,16 +1,19 @@
 package org.inpher.samples.query.spark;
 
+import org.apache.commons.codec.language.Soundex;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function2;
+import scala.Int;
 import scala.Tuple2;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Comparator;
 
 public class GutenbergSparkApp {
     public static final String ROOT_PATH = GutenbergSparkApp.class.getResource("/gutenberg/").getPath();
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         InpherSparkWordCountUtils iswcu = new InpherSparkWordCountUtils();
 
         // Get WordCount from the bible
@@ -21,24 +24,30 @@ public class GutenbergSparkApp {
 
         // Create a common map containing the aggregated word sum of both books
         JavaPairRDD combinedWordCount = ciaWordCount.union(bibleWordCount)
-                .reduceByKey((Function2<Integer, Integer, Integer>) (a, b) -> a + b);
+                .reduceByKey((Function2<Integer, Integer, Tuple2<Integer, Integer>>) (a, b) -> new Tuple2<>(a+b,a+b));
+
+        System.out.println("Number of unique words:" + combinedWordCount.count());
 
         // Collect, and sort top 100 words **without** decrypting, then load and decrypt for printing
-        combinedWordCount.top(100, new TupleComparator()).stream().forEach(tup -> {
-            Tuple2<String, Integer> tups = (Tuple2<String, Integer>) tup;
+        combinedWordCount.top(10, new TupleComparator()).stream().forEach(tup -> {
+            Tuple2<String, Tuple2<Integer,Integer>> tups = (Tuple2) tup;
             System.out.println("Word: " + tups._1);
-            System.out.println("Count: " + tups._2);
+            System.out.println("Count: " + tups._2._1);
         });
 
         // Encrypt and store the map containing the aggregated word sum of both books
-        JavaRDD<Tuple2<byte[], byte[]>> encWordCounts = iswcu.encryptWordCountPairs(bibleWordCount);
+        JavaRDD<Tuple2<byte[], byte[]>> encWordCounts = iswcu.encryptWordCountPairs(combinedWordCount);
 
         // Collect, and sort top 100 words **without** decrypting, then load and decrypt for printing
-        encWordCounts.top(100, iswcu.getOREComparator()).stream().forEach(tup -> {
-            Tuple2<String, Integer> decr = iswcu.decryptTuple((Tuple2<byte[], byte[]>) tup);
+        encWordCounts.top(10, InpherSparkWordCountUtils.comparator).stream().forEach(tup -> {
+            Tuple2<String, Integer> decr = iswcu.decryptTuple(tup);
             System.out.println("Word: " + decr._1);
             System.out.println("Count: " + decr._2);
         });
+
+        // Press enter to exit
+        System.out.println('\n' + "press enter to exit");
+        System.in.read();
     }
 }
 

@@ -11,6 +11,9 @@ import org.inpher.crypto.engines.AuthenticatedEncryptionEngine;
 import org.inpher.crypto.engines.ore.AbstractOREEngine;
 import org.inpher.crypto.engines.ore.AbstractOREFactory;
 import org.inpher.crypto.engines.ore.CipherTextComparator;
+import org.inpher.crypto.engines.ore.IntegerOREFactory;
+import org.inpher.crypto.engines.paillier.PaillierEngine;
+import org.inpher.crypto.engines.paillier.PaillierKeyPair;
 import scala.Tuple2;
 
 import java.io.IOException;
@@ -22,11 +25,13 @@ import java.util.Comparator;
 
 
 class InpherSparkWordCountUtils implements Serializable {
-    private final JavaSparkContext sc;
+    private JavaSparkContext sc;
     private static final String APP_NAME = "Encrypted BookWordCountIndexer";
+    private static final int PAILLER_KEY_SIZE = 2048;
     private CryptoEngine aesEngine;
     private AbstractOREEngine<Integer> oreEngine;
-    private WrappedComparator comparator;
+    private PaillierKeyPair paillierKeyPair;
+    static final WrappedComparator comparator = new WrappedComparator();
 
     /**
      * Constructs this helper class using new random keys
@@ -39,7 +44,7 @@ class InpherSparkWordCountUtils implements Serializable {
         AbstractOREFactory<Integer> factory = CryptoModule.newIntegerOrderRevealingEncryptionFactory();
         this.oreEngine = factory.createEngine();
         this.aesEngine = CryptoModule.newAuthenticatedEncryptionEngine();
-        this.comparator = new WrappedComparator(oreEngine.getCipherTextComparator());
+        this.paillierKeyPair = PaillierEngine.generateRandomKey(PAILLER_KEY_SIZE);
     }
 
     /**
@@ -47,8 +52,9 @@ class InpherSparkWordCountUtils implements Serializable {
      *
      * @param aesKey
      * @param oreKey
+     * @param paillierKeyPair
      */
-    public InpherSparkWordCountUtils(byte[] aesKey, byte[] oreKey){
+    public InpherSparkWordCountUtils(byte[] aesKey, byte[] oreKey, PaillierKeyPair paillierKeyPair){
         SparkConf conf = new SparkConf().setAppName(APP_NAME);
         this.sc = new JavaSparkContext(conf);
 
@@ -56,7 +62,7 @@ class InpherSparkWordCountUtils implements Serializable {
         AbstractOREFactory<Integer> factory = CryptoModule.newIntegerOrderRevealingEncryptionFactory();
         this.oreEngine = factory.createEngine(oreKey);
         this.aesEngine = CryptoModule.newAuthenticatedEncryptionEngine(aesKey);
-        this.comparator = new WrappedComparator(oreEngine.getCipherTextComparator());
+        this.paillierKeyPair = paillierKeyPair;
     }
 
     /**
@@ -81,7 +87,7 @@ class InpherSparkWordCountUtils implements Serializable {
      * @param pairs
      * @return Encrypted byte tuple containing
      */
-    public JavaRDD<Tuple2<byte[], byte[]>> encryptWordCountPairs(JavaPairRDD<String, Integer> pairs){
+    public JavaRDD<Tuple2<byte[], byte[]>> encryptWordCountPairs(JavaPairRDD<String, Tuple2<Integer,Integer>> pairs){
         return pairs.map(e -> new Tuple2<>(aesEngine.encrypt(e._1.getBytes()), oreEngine.encrypt(e._2)));
     }
 
@@ -93,7 +99,7 @@ class InpherSparkWordCountUtils implements Serializable {
      */
     public JavaPairRDD<String, Integer> decryptWordCountPairs(JavaRDD<Tuple2<byte[],byte[]>> encPairs){
         return JavaPairRDD.fromJavaRDD(encPairs.map(e ->
-                new Tuple2<>(aesEngine.decrypt(e._1).toString(), oreEngine.decrypt(e._2))));
+                new Tuple2<>(new String(aesEngine.decrypt(e._1)), oreEngine.decrypt(e._2))));
     }
 
     /**
@@ -132,16 +138,7 @@ class InpherSparkWordCountUtils implements Serializable {
      * @return ore key
      */
     public byte[] getOREkey(){
-        return this.getOREkey();
-    }
-
-    /**
-     * Returns Ciphertext comparator
-     *
-     * @return comparator
-     */
-    public WrappedComparator getOREComparator(){
-        return comparator;
+        return this.oreEngine.getKey();
     }
 
     /**
@@ -151,42 +148,28 @@ class InpherSparkWordCountUtils implements Serializable {
      * @return decrypted tuple
      */
     public Tuple2<String,Integer> decryptTuple(Tuple2<byte[], byte[]> tup) {
-        return new Tuple2<>(aesEngine.decrypt(tup._1).toString(), oreEngine.decrypt(tup._2));
+        return new Tuple2<>(new String(aesEngine.decrypt(tup._1)), oreEngine.decrypt(tup._2));
     }
 
     private void writeObject(ObjectOutputStream os) throws IOException {
         Gson gson = new Gson();
-        KeyWrapper wrap = new KeyWrapper(aesEngine.getKey(), oreEngine.getKey());
+        SerializationWrapper wrap = new SerializationWrapper(aesEngine.getKey(), oreEngine.getKey(), paillierKeyPair);
         os.writeObject(gson.toJson(wrap));
     }
 
     private void readObject(ObjectInputStream is) throws IOException, ClassNotFoundException {
         Gson gson = new Gson();
         String json = (String) is.readObject();
-        KeyWrapper wrap = gson.fromJson(json, KeyWrapper.class);
+        SerializationWrapper wrap = gson.fromJson(json, SerializationWrapper.class);
         aesEngine = new AuthenticatedEncryptionEngine(wrap.getAesKey());
         oreEngine = CryptoModule.newIntegerOrderRevealingEncryptionFactory().createEngine(wrap.getOreKey());
+        paillierKeyPair = wrap.getPaillerKeyPair();
+
     }
 }
 
 class WrappedComparator implements Comparator<Tuple2<byte[], byte[]>>, Serializable{
-    private CipherTextComparator comparator;
-
-    public WrappedComparator(CipherTextComparator cipherTextComparator) {
-        comparator = cipherTextComparator;
-    }
-
-    private void writeObject(ObjectOutputStream os) throws IOException {
-        Gson gson = new Gson();
-        System.out.println(gson.toJson(comparator));
-        os.writeObject(gson.toJson(comparator));
-    }
-
-    private void readObject(ObjectInputStream is) throws IOException, ClassNotFoundException {
-        Gson gson = new Gson();
-        String json = (String) is.readObject();
-        this.comparator = gson.fromJson(json, CipherTextComparator.class);
-    }
+    private static final CipherTextComparator comparator = new IntegerOREFactory().getCipherTextComparator();
 
     @Override
     public int compare(Tuple2<byte[], byte[]> o1, Tuple2<byte[], byte[]> o2) {
