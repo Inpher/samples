@@ -14,12 +14,16 @@ import org.inpher.crypto.engines.ore.CipherTextComparator;
 import org.inpher.crypto.engines.ore.IntegerOREFactory;
 import org.inpher.crypto.engines.paillier.PaillierEngine;
 import org.inpher.crypto.engines.paillier.PaillierKeyPair;
+import org.inpher.crypto.engines.paillier.PaillierPrivateKey;
+import org.inpher.crypto.engines.paillier.PaillierPublicKey;
 import scala.Tuple2;
+import scala.Tuple3;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -87,8 +91,9 @@ class InpherSparkWordCountUtils implements Serializable {
      * @param pairs
      * @return Encrypted byte tuple containing
      */
-    public JavaRDD<Tuple2<byte[], byte[]>> encryptWordCountPairs(JavaPairRDD<String, Tuple2<Integer,Integer>> pairs){
-        return pairs.map(e -> new Tuple2<>(aesEngine.encrypt(e._1.getBytes()), oreEngine.encrypt(e._2)));
+    public JavaRDD<Tuple3<byte[], byte[], byte[]>> encryptWordCountPairs(JavaPairRDD<String, Integer> pairs){
+        return pairs.map(e -> new Tuple3<>(aesEngine.encrypt(e._1.getBytes()), oreEngine.encrypt(e._2),
+                PaillierEngine.encrypt(paillierKeyPair.getPublicKey(), (long) e._2).toByteArray());
     }
 
     /**
@@ -97,9 +102,35 @@ class InpherSparkWordCountUtils implements Serializable {
      * @param encPairs encrypted word/count pair
      * @return decrypted word/count pair
      */
-    public JavaPairRDD<String, Integer> decryptWordCountPairs(JavaRDD<Tuple2<byte[],byte[]>> encPairs){
+    public JavaPairRDD<String, Integer> decryptWordCountPairs(JavaRDD<Tuple3<byte[],byte[],byte[]>> encPairs){
         return JavaPairRDD.fromJavaRDD(encPairs.map(e ->
-                new Tuple2<>(new String(aesEngine.decrypt(e._1)), oreEngine.decrypt(e._2))));
+                new Tuple2<>(new String(aesEngine.decrypt(e._1())), oreEngine.decrypt(e._2()))));
+    }
+
+    /**
+     * Adds to ciphertexts encrypted with Paillier FHE
+     *
+     * @param t1
+     * @param t2
+     * @return t1+t2
+     */
+    public byte[] paillierAddition(Tuple3<byte[],byte[],byte[]> t1, Tuple3<byte[],byte[],byte[]> t2){
+        return PaillierEngine.addCiphertexts(paillierKeyPair.getPublicKey(),
+                new BigInteger(t1._3()), new BigInteger(t2._3())).toByteArray();
+    }
+
+    /**
+     * @return returns paillier public key
+     */
+    public PaillierPublicKey getPaillerPublicKey(){
+        return paillierKeyPair.getPublicKey();
+    }
+
+    /**
+     * @return returns paillier private key
+     */
+    public PaillierPrivateKey getPaillierPrivateKey(){
+        return paillierKeyPair.getPrivateKey();
     }
 
     /**
@@ -147,8 +178,8 @@ class InpherSparkWordCountUtils implements Serializable {
      * @param tup encrypted tuple
      * @return decrypted tuple
      */
-    public Tuple2<String,Integer> decryptTuple(Tuple2<byte[], byte[]> tup) {
-        return new Tuple2<>(new String(aesEngine.decrypt(tup._1)), oreEngine.decrypt(tup._2));
+    public Tuple2<String,Integer> decryptTuple(Tuple3<byte[], byte[], byte[]> tup) {
+        return new Tuple2<>(new String(aesEngine.decrypt(tup._1())), oreEngine.decrypt(tup._2()));
     }
 
     private void writeObject(ObjectOutputStream os) throws IOException {
@@ -168,11 +199,11 @@ class InpherSparkWordCountUtils implements Serializable {
     }
 }
 
-class WrappedComparator implements Comparator<Tuple2<byte[], byte[]>>, Serializable{
+class WrappedComparator implements Comparator<Tuple3<byte[], byte[], byte[]>>, Serializable{
     private static final CipherTextComparator comparator = new IntegerOREFactory().getCipherTextComparator();
 
     @Override
-    public int compare(Tuple2<byte[], byte[]> o1, Tuple2<byte[], byte[]> o2) {
-        return this.comparator.compare(o1._2, o2._2);
+    public int compare(Tuple3<byte[], byte[], byte[]> o1, Tuple3<byte[], byte[], byte[]> o2) {
+        return this.comparator.compare(o1._2(), o2._2());
     }
 }
