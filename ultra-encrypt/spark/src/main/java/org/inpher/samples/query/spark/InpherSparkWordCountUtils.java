@@ -29,7 +29,7 @@ import java.util.Comparator;
 
 
 class InpherSparkWordCountUtils implements Serializable {
-    private JavaSparkContext sc;
+    private transient JavaSparkContext sc;
     private static final String APP_NAME = "Encrypted BookWordCountIndexer";
     private static final int PAILLER_KEY_SIZE = 2048;
     private CryptoEngine aesEngine;
@@ -93,7 +93,7 @@ class InpherSparkWordCountUtils implements Serializable {
      */
     public JavaRDD<Tuple3<byte[], byte[], byte[]>> encryptWordCountPairs(JavaPairRDD<String, Integer> pairs){
         return pairs.map(e -> new Tuple3<>(aesEngine.encrypt(e._1.getBytes()), oreEngine.encrypt(e._2),
-                PaillierEngine.encrypt(paillierKeyPair.getPublicKey(), (long) e._2).toByteArray());
+                PaillierEngine.encrypt(paillierKeyPair.getPublicKey(), (long) e._2).toByteArray()));
     }
 
     /**
@@ -182,21 +182,21 @@ class InpherSparkWordCountUtils implements Serializable {
         return new Tuple2<>(new String(aesEngine.decrypt(tup._1())), oreEngine.decrypt(tup._2()));
     }
 
-    private void writeObject(ObjectOutputStream os) throws IOException {
-        Gson gson = new Gson();
-        SerializationWrapper wrap = new SerializationWrapper(aesEngine.getKey(), oreEngine.getKey(), paillierKeyPair);
-        os.writeObject(gson.toJson(wrap));
-    }
-
-    private void readObject(ObjectInputStream is) throws IOException, ClassNotFoundException {
-        Gson gson = new Gson();
-        String json = (String) is.readObject();
-        SerializationWrapper wrap = gson.fromJson(json, SerializationWrapper.class);
-        aesEngine = new AuthenticatedEncryptionEngine(wrap.getAesKey());
-        oreEngine = CryptoModule.newIntegerOrderRevealingEncryptionFactory().createEngine(wrap.getOreKey());
-        paillierKeyPair = wrap.getPaillerKeyPair();
-
-    }
+//    private void writeObject(ObjectOutputStream os) throws IOException {
+//        Gson gson = new Gson();
+//        SerializationWrapper wrap = new SerializationWrapper(aesEngine.getKey(), oreEngine.getKey(), paillierKeyPair);
+//        os.writeObject(gson.toJson(wrap));
+//    }
+//
+//    private void readObject(ObjectInputStream is) throws IOException, ClassNotFoundException {
+//        Gson gson = new Gson();
+//        String json = (String) is.readObject();
+//        SerializationWrapper wrap = gson.fromJson(json, SerializationWrapper.class);
+//        aesEngine = new AuthenticatedEncryptionEngine(wrap.getAesKey());
+//        oreEngine = CryptoModule.newIntegerOrderRevealingEncryptionFactory().createEngine(wrap.getOreKey());
+//        paillierKeyPair = wrap.getPaillerKeyPair();
+//
+//    }
 }
 
 class WrappedComparator implements Comparator<Tuple3<byte[], byte[], byte[]>>, Serializable{
