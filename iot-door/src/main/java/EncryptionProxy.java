@@ -6,7 +6,9 @@ import org.inpher.crypto.CryptoEngine;
 import org.inpher.crypto.CryptoModule;
 import org.inpher.crypto.engines.DeterministicEngine;
 import org.inpher.crypto.engines.ore.AbstractOREEngine;
+import org.codehaus.jackson.map.ObjectMapper;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
@@ -46,7 +48,7 @@ public class EncryptionProxy {
         }
     }
 
-    public static void encryptAndIndexJSON(Map<String, String> jsonClear) throws ParseException {
+    public static void encryptAndIndexJSON(Map<String, String> jsonClear) throws ParseException, IOException {
         System.out.println("ORE Key: " + toB64(oreDateEngine.getKey()));
         System.out.println("AES Key: " + toB64(aesEngine.getKey()));
         System.out.println("Deterministic Key: " + toB64(deterEngine.getKey()));
@@ -58,7 +60,7 @@ public class EncryptionProxy {
         jsonEnc.put("last_name", deterEncrypt(jsonClear.get("last_name")));
         jsonEnc.put("first_name", deterEncrypt(jsonClear.get("first_name")));
         jsonEnc.put("building", deterEncrypt(jsonClear.get("building")));
-        jsonEnc.put("msg", aesEncrypt(jsonClear.toString()));
+        jsonEnc.put("msg", aesEncrypt(new ObjectMapper().writeValueAsString(jsonClear)));
 
         System.out.println("INPHER PROXY: DEBUG encrypted event:\n" + jsonEnc +"\n");
 

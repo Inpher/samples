@@ -39,6 +39,9 @@ class Access extends TimerTask {
         } catch (ParseException e) {
             e.printStackTrace();
             System.out.println("Could not parse date string!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Could not parse Map!");
         }
     }
 
