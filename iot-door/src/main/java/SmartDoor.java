@@ -1,4 +1,4 @@
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DateFormat;
@@ -12,21 +12,70 @@ import java.util.stream.Stream;
  * Created by alex on 12/16/16.
  */
 public class SmartDoor {
+    private static String csvFilePeople;
+    private static String csvFileDoors;
+    private static List<Person> people;
+    private static List<Door> doors;
+
+    private static List<Door> getDoorsFromFile() {
+        try (Stream<String> stream = Files.lines(Paths.get(csvFileDoors))) {
+            return stream.map(s -> new Door(s.split(","))).collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static List<Person> getPeopleFromFile() {
+        try (Stream<String> stream = Files.lines(Paths.get(csvFilePeople))) {
+            return stream.map(s -> new Person(s.split(","))).collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static void main(String[] args){
+        if (args.length > 0) {
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(new File(args[0]));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+            try {
+                csvFileDoors = br.readLine();
+                csvFilePeople = br.readLine();
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            people = getPeopleFromFile();
+            doors = getDoorsFromFile();
+        }
+        else{
+            csvFilePeople = SmartDoor.class.getResource("/person.csv").getPath();
+            csvFileDoors = SmartDoor.class.getResource("/door.csv").getPath();
+        }
+        people = getPeopleFromFile();
+        doors = getDoorsFromFile();
         Timer timer = new Timer();
-        timer.schedule(new Access(), 0,  (int) (10000 + Math.random()*10000));
+        timer.schedule(new Access(people,doors), 0,  (int) (10000 + Math.random()*10000));
     }
 }
 
 class Access extends TimerTask {
-    private static final String csvFilePeople = SmartDoor.class.getResource("/person.csv").getPath();
-    private static final String csvFileDoors = SmartDoor.class.getResource("/door.csv").getPath();
-    private static final List<Person> people = getPeopleFromFile();
-    private static final List<Door> doors = getDoorsFromFile();
-    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private final List<Door> doors;
+    private final List<Person> people;
     private Map jsonClear;
-    private Map jsonEncrypted;
+
+    public Access(List<Person> people, List<Door> doors) {this.people = people;
+    this.doors = doors;
+    }
+
 
     public void run() {
         // Generate json
@@ -55,23 +104,6 @@ class Access extends TimerTask {
         jsonClear.putAll(getTime());
     }
 
-    private static List<Door> getDoorsFromFile() {
-        try (Stream<String> stream = Files.lines(Paths.get(csvFileDoors))) {
-            return stream.map(s -> new Door(s.split(","))).collect(Collectors.toList());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private static List<Person> getPeopleFromFile() {
-        try (Stream<String> stream = Files.lines(Paths.get(csvFilePeople))) {
-            return stream.map(s -> new Person(s.split(","))).collect(Collectors.toList());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     private static Map getTime(){
         Date date = new Date();
