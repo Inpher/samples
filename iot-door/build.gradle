@@ -30,4 +30,21 @@ dependencies {
 task fatJar(type: OneJar) {
     mainClass = 'SmartDoor'
     additionalDir = file('src/main/resources')
+
+    doLast {
+        copy {
+            from 'build/libs/iot-door-1.0-standalone.jar'
+            into '../docker/iot-proxy/'
+        }
+
+        copy {
+            from 'src/main/resources/person.csv'
+            into '../docker/iot-proxy/'
+        }
+
+        copy {
+            from 'src/main/resources/door.csv'
+            into '../docker/iot-proxy/'
+        }
+    }
 }
