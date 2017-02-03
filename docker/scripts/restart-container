@@ -1,0 +1,4 @@
+#!/bin/bash
+docker stop iot-container
+docker rm -v iot-container
+docker run --name iot-container -td iot-proxy
