@@ -1,2 +1,4 @@
 *.csv
 *.jar
+logs
+logs/*
