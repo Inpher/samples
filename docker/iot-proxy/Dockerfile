@@ -45,3 +45,4 @@ RUN mkdir /iot-proxy
 COPY iot-door-1.0-standalone.jar /iot-proxy/
 COPY *.csv /iot-proxy/
 COPY config /iot-proxy/
+CMD sh -c "java -jar /iot-proxy/iot-door-1.0-standalone.jar /iot-proxy/config"

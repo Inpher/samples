@@ -49,9 +49,9 @@ public class EncryptionProxy {
     }
 
     public static void encryptAndIndexJSON(Map<String, String> jsonClear) throws ParseException, IOException {
-        System.out.println("ORE Key: " + toB64(oreDateEngine.getKey()));
-        System.out.println("AES Key: " + toB64(aesEngine.getKey()));
-        System.out.println("Deterministic Key: " + toB64(deterEngine.getKey()));
+        //System.out.println("ORE Key: " + toB64(oreDateEngine.getKey()));
+        //System.out.println("AES Key: " + toB64(aesEngine.getKey()));
+        //System.out.println("Deterministic Key: " + toB64(deterEngine.getKey()));
         // Encrypt
         Map jsonEnc = new HashMap();
         jsonEnc.put("time", oreDateEncrypt(jsonClear.get("time")));
@@ -68,7 +68,7 @@ public class EncryptionProxy {
         IndexResponse response = client.prepareIndex("iotindex", "access")
                 .setSource(jsonEnc)
                 .get();
-        System.out.println(response);
+        //System.out.println(response);
 
 
     }
