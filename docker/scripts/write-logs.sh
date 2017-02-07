@@ -1,2 +1,2 @@
 #!/bin/bash
-docker logs -f iot-container >> ../logs/iot-container.log &
+docker logs -f iot-container >> ~/log/iot-container.log &
