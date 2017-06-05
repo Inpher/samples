@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:CUSTOMER xmlns:tns="http://www.temenos.com/T24/event/IFSampleEventFlow/CUSTOMER"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.temenos.com/T24/event/IFSampleEventFlow/CUSTOMER IFSampleEventFlow-CUSTOMER.xsd">
+    <tns:eventCommon>
+        <ns0:application xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">CUSTOMER</ns0:application>
+        <ns0:companyId xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">GB0010001</ns0:companyId>
+        <ns0:operator xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">AUTHORISER</ns0:operator>
+        <ns0:today xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">2016-04-22</ns0:today>
+        <ns0:transactionStage xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">INPUT-AUTHORISE
+        </ns0:transactionStage>
+        <ns0:eventId xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">
+            bf510285-2414-4ba1-8fe6-52cc5e05ec3f
+        </ns0:eventId>
+        <ns0:creationTime xmlns:ns0="http://www.temenos.com/T24/event/Common/EventCommon">2016-08-23T16:24:47.023Z
+        </ns0:creationTime>
+    </tns:eventCommon>
+    <tns:id>190180</tns:id>
+    <tns:accountOfficer>1</tns:accountOfficer>
+    <tns:addressList/>
+    <tns:altCusIdList/>
+    <tns:amlCheck>NULL</tns:amlCheck>
+    <tns:amlResult>NULL</tns:amlResult>
+    <tns:employmentStatusGroup index="1">
+        <tns:employersAddList/>
+    </tns:employmentStatusGroup>
+    <tns:authoriser>73339_AUTHORISER</tns:authoriser>
+    <tns:checkLiab>""</tns:checkLiab>
+    <tns:clsCparty>NO</tns:clsCparty>
+    <tns:coCode>GB0010001</tns:coCode>
+    <tns:companyBook>GB0010001</tns:companyBook>
+    <tns:countryList>
+        <tns:country language="GB">USA</tns:country>
+    </tns:countryList>
+    <tns:currNo>1</tns:currNo>
+    <tns:customerCode>190180</tns:customerCode>
+    <tns:customerNo>190180</tns:customerNo>
+    <tns:customerRatingList/>
+    <tns:customerStatus>1</tns:customerStatus>
+    <tns:customerType>ACTIVE</tns:customerType>
+    <tns:dateTimeList>
+        <tns:dateTime index="1">1608231624</tns:dateTime>
+    </tns:dateTimeList>
+    <tns:deptCode>1</tns:deptCode>
+    <tns:familyName>Trump</tns:familyName>
+    <tns:fax1List/>
+    <tns:formerVisTypeGroup index="1">
+        <tns:formerVisCommentList/>
+    </tns:formerVisTypeGroup>
+    <tns:furtherDetailsList/>
+    <tns:gender>MALE</tns:gender>
+    <tns:givenNames>Donald</tns:givenNames>
+    <tns:holdingsPivotList/>
+    <tns:industry>1000</tns:industry>
+    <tns:inputterList>
+        <tns:inputter index="1">73339_INPUTTER__OFS_IRISPA_190180</tns:inputter>
+    </tns:inputterList>
+    <tns:interestsList/>
+    <tns:internetBankingService>NULL</tns:internetBankingService>
+    <tns:language>1</tns:language>
+    <tns:legalIdDocNameList/>
+    <tns:mnemonic>DRUMPF</tns:mnemonic>
+    <tns:mobileBankingService>NULL</tns:mobileBankingService>
+    <tns:name1List>
+        <tns:name1 language="GB">Donald</tns:name1>
+    </tns:name1List>
+    <tns:name2List/>
+    <tns:nameAddress>Trump Donald White House Washington DC</tns:nameAddress>
+    <tns:nationality>US</tns:nationality>
+    <tns:offPhoneList/>
+    <tns:otherNationalityList/>
+    <tns:otherOfficerList/>
+    <tns:overrideList/>
+    <tns:overrideReasonList/>
+    <tns:pastimesList/>
+    <tns:postCodeList>
+        <tns:postCode language="GB">123456</tns:postCode>
+    </tns:postCodeList>
+    <tns:postingRestrictList/>
+    <tns:residence>US</tns:residence>
+    <tns:sector>1001</tns:sector>
+    <tns:sectorName>GB=Individual</tns:sectorName>
+    <tns:shortNameList>
+        <tns:shortName language="GB">Trump</tns:shortName>
+    </tns:shortNameList>
+    <tns:socialNtwIdsList/>
+    <tns:spokenLanguageList/>
+    <tns:streetList>
+        <tns:street language="GB">White House</tns:street>
+    </tns:streetList>
+    <tns:target>999</tns:target>
+    <tns:taxIdList/>
+    <tns:textList/>
+    <tns:title>MR</tns:title>
+    <tns:townCountryList>
+        <tns:townCountry language="GB">Washington DC</tns:townCountry>
+    </tns:townCountryList>
+    <tns:visTypeGroup index="1">
+        <tns:visCommentList/>
+        <tns:visInternalReviewList/>
+    </tns:visTypeGroup>
+</tns:CUSTOMER>

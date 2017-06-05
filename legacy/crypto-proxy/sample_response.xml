@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+<lst name="responseHeader"><int name="status">0</int><int name="QTime">0</int><lst name="params"><str name="q">_text_:pQShPSbKh3rYlvaTgamoqwNya0AQIUURLlbRW2xVCqk=</str><str name="fl">id,mnemonic,name,address,postcode,table</str><str name="rows">50</str></lst></lst><result name="response" numFound="1" start="0"><doc><arr name="name"><str>Trump</str></arr><str name="id">190180</str><arr name="mnemonic"><str>DRUMPF</str></arr><arr name="postcode"><str>123456</str></arr><arr name="address"><str>Trump Donald White House Washington DC</str></arr><arr name="table"><str>Donald</str></arr></doc></result>
+</response>
