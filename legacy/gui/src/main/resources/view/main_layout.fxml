@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.inpher.sampleapp.controller.MainController">
+    <children>
+        <SplitPane dividerPositions="0.35451505016722407" layoutX="65.0" layoutY="40.0" prefHeight="400.0"
+                   prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                    <children>
+                        <VBox layoutX="19.0" layoutY="40.0" prefHeight="398.0" prefWidth="137.0"
+                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="0.0">
+                            <children>
+                                <HBox>
+                                    <children>
+                                        <TextField fx:id="searchField" promptText="search" HBox.hgrow="ALWAYS">
+                                            <HBox.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                            </HBox.margin>
+                                        </TextField>
+                                    </children>
+                                </HBox>
+                                <Separator prefWidth="200.0"/>
+                                <AnchorPane fx:id="fileTreePane" VBox.vgrow="ALWAYS">
+                                    <fx:include fx:id="fileTree" source="file_tree_layout.fxml"
+                                                AnchorPane.topAnchor="0.0"
+                                                AnchorPane.bottomAnchor="0.0"
+                                                AnchorPane.leftAnchor="0.0"
+                                                AnchorPane.rightAnchor="0.0"/>
+                                </AnchorPane>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                    <children>
+                        <VBox layoutX="61.0" layoutY="42.0" prefHeight="398.0" prefWidth="382.0"
+                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="0.0">
+                            <children>
+                                <AnchorPane VBox.vgrow="ALWAYS">
+                                        <fx:include fx:id="filePreview"
+                                                    source="file_preview_layout.fxml"
+                                                    AnchorPane.topAnchor="0.0"
+                                                    AnchorPane.bottomAnchor="0.0"
+                                                    AnchorPane.leftAnchor="0.0"
+                                                    AnchorPane.rightAnchor="0.0"/>
+                                </AnchorPane>
+                                <HBox alignment="CENTER_RIGHT">
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="NEW">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" onAction="#onNewDirectoryAction"
+                                                          text="Directory"/>
+                                                <MenuItem mnemonicParsing="false" onAction="#onNewFileUploadAction"
+                                                          text="File Upload"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                    </VBox.margin>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
+</AnchorPane>
