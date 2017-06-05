@@ -1,0 +1,5 @@
+{
+  "movie" : ["retrievable"],
+  "firstName" : ["searchable"],
+  "lastName" : ["searchable"]
+}

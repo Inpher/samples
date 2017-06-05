@@ -1,0 +1,14 @@
+*DS_Store
+.idea/codeStyleSettings.xml
+.idea/
+*.iml
+**/doc/
+**/target/
+**/.idea/
+.project
+.settings
+.classpath
+**/.gradle/
+**/build/
+**/artifacts/
+/bin/

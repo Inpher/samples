@@ -1,0 +1,3 @@
+cluster.name: inpher-es
+network.host: localhost
+transport.client.initial_nodes: ["localhost:9300"]
